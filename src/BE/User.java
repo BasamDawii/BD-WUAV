@@ -17,6 +17,8 @@ public abstract class User {
         this.role = role;
     }
 
+
+
     // Getters and Setters for all fields including the 'role' field
 
     public String getRole() {
