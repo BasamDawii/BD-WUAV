@@ -1,4 +1,4 @@
 package GUI.Controllers.SalespersonControllers;
 
-public class SalespersonController {
+public class SalespersonViewController {
 }

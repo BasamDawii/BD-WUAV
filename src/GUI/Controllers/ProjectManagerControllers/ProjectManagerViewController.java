@@ -1,4 +1,4 @@
 package GUI.Controllers.ProjectManagerControllers;
 
-public class ProjectManagerControler {
+public class ProjectManagerViewController {
 }
