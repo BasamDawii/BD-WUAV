@@ -6,13 +6,25 @@ public abstract class User {
     private String lastName;
     private String email;
     private String password;
+    private String role;
 
-    public User(int id, String firstName, String lastName, String email, String password) {
+    public User(int id, String firstName, String lastName, String email, String password, String role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
+    }
+
+    // Getters and Setters for all fields including the 'role' field
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public int getId() {
@@ -54,5 +66,4 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    // Constructor, Getters, Setters, and other common methods
 }
