@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="GUI.Views.technician.Technician"
-            prefHeight="400.0" prefWidth="600.0">
-
+            fx:controller="GUI.Controllers.TechnicianControllers.TechnicianViewController"
+            prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" spacing="10.0">
+            <children>
+                <Label text="Installation Documentation">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
+                <Label text="Layout Drawing:"/>
+                <TextArea fx:id="layoutDrawingField" prefHeight="100.0" prefWidth="700.0"/>
+                <Label text="Text Description:"/>
+                <TextArea fx:id="textDescriptionField" prefHeight="100.0" prefWidth="700.0"/>
+                <Label text="Upload Pictures:"/>
+                <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#uploadPictures" text="Upload"/>
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveDocumentation" text="Save Documentation"/>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
