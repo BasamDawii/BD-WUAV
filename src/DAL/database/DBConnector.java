@@ -13,14 +13,12 @@ public class DBConnector {
     //Defining server and database
     public DBConnector() {
         dataSource = new SQLServerDataSource();
-        dataSource.setServerName("10.176.111.31");
-        dataSource.setDatabaseName("Event_Tickets_EASV_bar");
-        dataSource.setUser("CSe22A_23");
-        dataSource.setPassword("DataMatiker");
+        dataSource.setServerName("10.176.111.34");
+        dataSource.setDatabaseName("DB_WUAV_2023");
+        dataSource.setUser("CSe2022A_e_8");
+        dataSource.setPassword("CSe2022AE8#");
         dataSource.setTrustServerCertificate(true);
         dataSource.setPortNumber(1433);
-
-
     }
 
     public Connection getConnected() throws SQLServerException {
