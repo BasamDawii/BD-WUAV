@@ -5,6 +5,7 @@ import BE.Salesperson;
 import BE.Technician;
 import BE.User;
 import BLL.UserService;
+import javafx.event.ActionEvent;
 
 public class LoginController {
     private UserService userService;
@@ -13,8 +14,8 @@ public class LoginController {
         userService = new UserService();
     }
 
-    public void login(String email, String password) {
-        User user = userService.login(email, password);
+    public void login(String username, String password) {
+        User user = userService.login(username, password);
         if (user != null) {
             openAppropriateDashboard(user);
         } else {
@@ -32,5 +33,8 @@ public class LoginController {
         } else {
             // Show error message, e.g., "Invalid user type."
         }
+    }
+    public void LoginButton(ActionEvent event) {
+
     }
 }
