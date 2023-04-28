@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class UserRepository {
 
     public User login(String email, String password) {
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (Connection connection = new DBConnector().getConnected();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
@@ -23,15 +23,14 @@ public class UserRepository {
                 if (resultSet.next()) {
                     String role = resultSet.getString("role");
                     int id = resultSet.getInt("id");
-                    String firstName = resultSet.getString("first_name");
-                    String lastName = resultSet.getString("last_name");
+                    String username = resultSet.getString("username");
                     switch (role) {
                         case "Technician":
-                            return new Technician(id, firstName, lastName, email, password);
+                            return new Technician(id, username, password);
                         case "Project Manager":
-                            return new ProjectManager(id, firstName, lastName, email, password);
+                            return new ProjectManager(id, username, password);
                         case "Salesperson":
-                            return new Salesperson(id, firstName, lastName, email, password);
+                            return new Salesperson(id, username, password);
                         default:
                             return null;
                     }
