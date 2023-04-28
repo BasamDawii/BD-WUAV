@@ -1,7 +1,6 @@
 package GUI.Models;
 
 import BE.Technician;
-import BLL.LoginManager;
 
 public class LoginModel {
 

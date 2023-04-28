@@ -1,58 +1,36 @@
 package GUI.Controllers;
 
+import BE.ProjectManager;
+import BE.Salesperson;
+import BE.Technician;
 import BE.User;
 import BLL.UserService;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class LoginController {
-    @FXML
-    private TextField emailField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private Label errorLabel;
+    private UserService userService;
 
-    private UserService userService = new UserService();
+    public LoginController() {
+        userService = new UserService();
+    }
 
-    public void login() {
-        String email = emailField.getText();
-        String password = passwordField.getText();
+    public void login(String email, String password) {
         User user = userService.login(email, password);
-
         if (user != null) {
-            try {
-                Stage stage = (Stage) emailField.getScene().getWindow();
-                Parent root;
-                String role = user.getRole();
-                switch (role) {
-                    case "Technician":
-                        root = FXMLLoader.load(getClass().getResource("technician_view.fxml"));
-                        break;
-                    case "Project Manager":
-                        root = FXMLLoader.load(getClass().getResource("project_manager_view.fxml"));
-                        break;
-                    case "Salesperson":
-                        root = FXMLLoader.load(getClass().getResource("salesperson_view.fxml"));
-                        break;
-                    default:
-                        errorLabel.setText("Invalid role");
-                        return;
-                }
-                stage.setScene(new Scene(root));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            openAppropriateDashboard(user);
         } else {
-            errorLabel.setText("Invalid email or password");
+            // Show error message, e.g., "Invalid email or password."
+        }
+    }
+
+    private void openAppropriateDashboard(User user) {
+        if (user instanceof Technician) {
+            // Open Technician Dashboard
+        } else if (user instanceof ProjectManager) {
+            // Open Project Manager Dashboard
+        } else if (user instanceof Salesperson) {
+            // Open Salesperson Dashboard
+        } else {
+            // Show error message, e.g., "Invalid user type."
         }
     }
 }
