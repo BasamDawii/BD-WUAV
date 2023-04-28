@@ -5,16 +5,29 @@ import BE.Salesperson;
 import BE.Technician;
 import BE.User;
 import BLL.UserService;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 public class LoginController {
     private UserService userService;
+
+    @FXML
+    private TextField usernameTXT;
+
+    @FXML
+    private PasswordField passwordTXT;
 
     public LoginController() {
         userService = new UserService();
     }
 
-    public void login(String email, String password) {
-        User user = userService.login(email, password);
+    @FXML
+    public void handleLoginButton(ActionEvent actionEvent) {
+        String username = usernameTXT.getText();
+        String password = passwordTXT.getText();
+        User user = userService.login(username, password);
         if (user != null) {
             openAppropriateDashboard(user);
         } else {
