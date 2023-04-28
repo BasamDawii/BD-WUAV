@@ -34,9 +34,18 @@
                <VBox.margin>
                   <Insets top="110.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Button" textFill="WHITE" />
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Button" textFill="WHITE" />
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Button" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Button" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
          </children></VBox>
       <VBox prefHeight="700.0" prefWidth="983.0">
          <children>
