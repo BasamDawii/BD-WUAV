@@ -1,5 +1,6 @@
 package GUI.Controllers.TechnicianControllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -36,5 +37,11 @@ public class TechnicianViewController {
         // For example, you can use the BLL package classes to handle data saving
 
         // Show a confirmation message or an error message if there was an issue while saving the data
+    }
+
+    public void uploadButton(ActionEvent event) {
+    }
+
+    public void SaveButton(ActionEvent event) {
     }
 }
