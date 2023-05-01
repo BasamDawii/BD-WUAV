@@ -1,27 +1,28 @@
 package BE;
 
-public class Salesperson {
+public class Salesperson implements Employee {
     int id;
     String username;
     String password;
+
     public Salesperson(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
+
+    @Override
     public int getId() {
         return id;
     }
-    public String getName() {
+
+    @Override
+    public String getUsername() {
         return username;
     }
-    public void setName(String name) {
-        this.username = name;
-    }
+
+    @Override
     public String getPassword() {
         return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

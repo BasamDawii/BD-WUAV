@@ -1,6 +1,6 @@
 package BE;
 
-public class ProjectManager {
+public class ProjectManager implements Employee {
     int id;
     String username;
     String password;
@@ -10,19 +10,19 @@ public class ProjectManager {
         this.username = username;
         this.password = password;
     }
+
+    @Override
     public int getId() {
         return id;
     }
-    public String getName() {
+
+    @Override
+    public String getUsername() {
         return username;
     }
-    public void setName(String name) {
-        this.username = name;
-    }
+
+    @Override
     public String getPassword() {
         return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

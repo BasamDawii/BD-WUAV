@@ -5,6 +5,7 @@ public class Customer {
     private String name;
     private String address;
     private String contactEmail;
+    private String contactPhone;
 
     public Customer(int id, String name, String address, String contactEmail, String contactPhone) {
         this.id = id;
@@ -53,7 +54,4 @@ public class Customer {
     public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
     }
-
-    private String contactPhone;
-    // Constructor, Getters, Setters, and other common methods
 }

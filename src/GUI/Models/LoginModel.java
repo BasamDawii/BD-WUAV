@@ -1,5 +1,6 @@
 package GUI.Models;
 
+import BE.Employee;
 import BE.ProjectManager;
 import BE.Salesperson;
 import BE.Technician;
@@ -8,16 +9,13 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class LoginModel {
     private LoginManager loginManager;
-    public LoginModel(){loginManager = new LoginManager();}
-    public Technician technicianLogin(String username, String password) throws SQLServerException {
-        return loginManager.technicianLogin(username, password);
+
+    public LoginModel() {
+        loginManager = new LoginManager();
     }
 
-    public ProjectManager projectManagerLogin(String username, String password) throws SQLServerException {
-        return loginManager.projectManagerLogin(username, password);
+    public Employee employeeLogin(String username, String password) throws SQLServerException {
+        return loginManager.employeeLogin(username, password);
     }
 
-    public Salesperson salespersonLogin(String username, String password) throws SQLServerException {
-        return loginManager.salespersonLogin(username, password);
-    }
 }

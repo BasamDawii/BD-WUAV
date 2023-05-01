@@ -1,5 +1,6 @@
 package BLL;
 
+import BE.Employee;
 import BE.ProjectManager;
 import BE.Salesperson;
 import BE.Technician;
@@ -14,17 +15,7 @@ public class LoginManager {
         loginDb = new Login_DB();
     }
 
-    public Technician technicianLogin(String username, String password) throws SQLServerException {
-        return loginDb.technicianLogin(username, password);
+    public Employee employeeLogin(String username, String password) throws SQLServerException {
+        return loginDb.employeeLogin(username, password);
     }
-
-
-    public ProjectManager projectManagerLogin(String username, String password) throws SQLServerException {
-        return loginDb.projectManagerLogin(username, password);
-    }
-
-    public Salesperson salespersonLogin(String username, String password) throws SQLServerException {
-        return loginDb.salespersonLogin(username, password);
-    }
-
 }
