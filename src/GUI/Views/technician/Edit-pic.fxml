@@ -14,7 +14,7 @@
       <items>
           <Button fx:id="exampleButton" onAction="#uploadPictures" text="Upload Image" />
          <Button mnemonicParsing="false" onAction="#drawButton" text="Draw" />
-          <Button mnemonicParsing="false" text="Save the Image" />
+          <Button fx:id="saveimage" mnemonicParsing="false" onAction="#saveImageToProgram" text="Save the Image" />
       </items>
    </ToolBar>
 

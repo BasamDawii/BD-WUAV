@@ -67,6 +67,9 @@
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="5.0" />
                </VBox.margin>
+               <children>
+                  <ImageView fx:id="uploadedImageView" fitHeight="280.0" fitWidth="902.0" layoutX="-3.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
             </Pane>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text Area">
                <font>
