@@ -9,5 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="microsoft.sqlserver.mssql.jdbc" level="project" />
     <orderEntry type="library" name="mindrot.jbcrypt" level="project" />
+    <orderEntry type="library" name="apache.pdfbox" level="project" />
+    <orderEntry type="library" name="imgscalr.lib" level="project" />
   </component>
 </module>
