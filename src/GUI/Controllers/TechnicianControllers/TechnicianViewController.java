@@ -12,6 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -19,6 +20,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -27,7 +29,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.imgscalr.Scalr;
 
 public class TechnicianViewController {
 
@@ -37,6 +38,7 @@ public class TechnicianViewController {
     private TextArea textFieldArea;
     @FXML
     private ImageView uploadedImageView;
+    private List<Node> imagePaneNodes;
 
     public void uploadButton(ActionEvent event) {
         try {
@@ -54,14 +56,12 @@ public class TechnicianViewController {
             e.printStackTrace();
         }
     }
-    public void setImagePaneContent(Image image, ObservableList<Node> drawingContent) {
-        // Set the edited image in the ImageView
-        uploadedImageView.setImage(image);
 
-        // Clear the savedImageArea and add the drawing content to it
-        savedImageArea.getChildren().clear();
-        savedImageArea.getChildren().addAll(drawingContent);
+    public void setImagePaneContent(Image image, List<Node> nodes) {
+        this.uploadedImageView.setImage(image);
+        this.imagePaneNodes = nodes;
     }
+
     public void SaveButton(ActionEvent event) {
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(PDRectangle.A4);
@@ -69,30 +69,55 @@ public class TechnicianViewController {
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
             contentStream.setFont(PDType1Font.HELVETICA, 12);
-            contentStream.beginText();
-            contentStream.newLineAtOffset(25, 700);
 
-            String text = textFieldArea.getText();
-            contentStream.showText(text);
+            // Save images and drawings to the PDF
+            if (imagePaneNodes != null && !imagePaneNodes.isEmpty()) {
+                for (Node node : imagePaneNodes) {
+                    if (node instanceof ImageView) {
+                        ImageView imageView = (ImageView) node;
 
-            contentStream.endText();
+                        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
+                        float x = (float) imageView.getX();
+                        float y = page.getMediaBox().getHeight() - (float) imageView.getY() - (float) imageView.getFitHeight();
 
-            // Save the image to the PDF
-            if (uploadedImageView.getImage() != null) {
-                Image image = uploadedImageView.getImage();
-                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                        PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
+                        contentStream.drawImage(pdImage, x, y, (float) imageView.getFitWidth(), (float) imageView.getFitHeight());
+                    } else if (node instanceof Circle) {
+                        Circle circle = (Circle) node;
 
-                // Scale the image to 150x150 pixels
-                BufferedImage scaledImage = Scalr.resize(bufferedImage, 150, 150);
+                        float x = (float) circle.getCenterX();
+                        float y = page.getMediaBox().getHeight() - (float) circle.getCenterY();
+                        float radius = (float) circle.getRadius();
+                        float k = 0.5522847498f;
 
-                // Calculate image position
-                float x = (page.getMediaBox().getWidth() - scaledImage.getWidth()) / 2;
-                float y = (page.getMediaBox().getHeight() - scaledImage.getHeight()) / 2;
-
-                PDImageXObject pdImage = LosslessFactory.createFromImage(document, scaledImage);
-                contentStream.drawImage(pdImage, x, y, scaledImage.getWidth(), scaledImage.getHeight());
+                        contentStream.setNonStrokingColor(javaFXColorToAWTColor((javafx.scene.paint.Color) circle.getFill()));
+                        contentStream.moveTo(x + radius, y);
+                        contentStream.curveTo(x + radius, y + radius * k, x + radius * k, y + radius, x, y + radius);
+                        contentStream.curveTo(x - radius * k, y + radius, x - radius, y + radius * k, x - radius, y);
+                        contentStream.curveTo(x - radius, y - radius * k, x - radius * k, y - radius, x, y - radius);
+                        contentStream.curveTo(x + radius * k, y - radius, x + radius, y - radius * k, x + radius, y);
+                        contentStream.fill();
+                    }
+                }
             }
 
+            // Save the text to the PDF (At the bottom)
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+
+            String text = textFieldArea.getText();
+            String[] lines = text.split("\n");
+            float margin = 25;
+            float lineHeight = 14;
+            float yPosition = 50;
+
+            for (int i = 0; i < lines.length; i++) {
+                contentStream.newLineAtOffset(margin, yPosition - (i * lineHeight));
+                contentStream.showText(lines[i]);
+                contentStream.newLineAtOffset(-margin, 0);
+            }
+
+            contentStream.endText();
             contentStream.close();
 
             // Save the PDF document
@@ -114,4 +139,7 @@ public class TechnicianViewController {
         }
     }
 
+    private java.awt.Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {
+        return new java.awt.Color((float) fxColor.getRed(), (float) fxColor.getGreen(), (float) fxColor.getBlue(), (float) fxColor.getOpacity());
+    }
 }
