@@ -1,5 +1,6 @@
 package GUI.Controllers.TechnicianControllers;
 
+import BE.Employee;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -20,6 +21,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -31,6 +36,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class TechnicianViewController {
+    @FXML
+    private TextArea projectDescriptionArea;
 
     @FXML
     private Pane savedImageArea;
@@ -39,6 +46,12 @@ public class TechnicianViewController {
     @FXML
     private ImageView uploadedImageView;
     private List<Node> imagePaneNodes;
+    private Employee loggedInEmployee;
+
+    public void setLoggedInEmployee(Employee employee) {
+        this.loggedInEmployee = employee;
+    }
+
 
     public void uploadButton(ActionEvent event) {
         try {
@@ -99,6 +112,7 @@ public class TechnicianViewController {
                         contentStream.fill();
                     }
                 }
+
             }
 
             // Save the text to the PDF (At the bottom)
@@ -117,6 +131,9 @@ public class TechnicianViewController {
                 contentStream.newLineAtOffset(-margin, 0);
             }
 
+
+
+            // Save the PDF document
             contentStream.endText();
             contentStream.close();
 
@@ -127,13 +144,12 @@ public class TechnicianViewController {
             File file = fileChooser.showSaveDialog(savedImageArea.getScene().getWindow());
             if (file != null) {
                 document.save(file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                document.close(); // Move this line here
 
-        try {
-            document.close();
+                // Save the project description to the database
+                String projectDescription = projectDescriptionArea.getText();
+                saveProjectDescriptionToDatabase(projectDescription);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,5 +157,23 @@ public class TechnicianViewController {
 
     private java.awt.Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {
         return new java.awt.Color((float) fxColor.getRed(), (float) fxColor.getGreen(), (float) fxColor.getBlue(), (float) fxColor.getOpacity());
+    }
+    private void saveProjectDescriptionToDatabase(String projectDescription) {
+        String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=BM_xm;user=YOUR_USERNAME;password=YOUR_PASSWORD;";
+        String insertProjectSQL = "INSERT INTO Project (projectName, projectDescription, startDate, customerId, projectManagerId) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(connectionString);
+             PreparedStatement preparedStatement = connection.prepareStatement(insertProjectSQL)) {
+
+            preparedStatement.setString(1, "Project Name"); // Replace with actual project name
+            preparedStatement.setString(2, projectDescription);
+            preparedStatement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Assuming today's date as start date
+            preparedStatement.setInt(4, 1); // Replace with actual customerId
+            preparedStatement.setInt(5, 1); // Replace with actual projectManagerId
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
