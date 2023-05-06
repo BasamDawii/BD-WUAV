@@ -54,21 +54,25 @@ public class LoginController implements Initializable {
             Parent root = loader.load();
             TechnicianViewController technicianController = loader.getController();
             technicianController.setLoggedInEmployee(employee);
+            technicianController.setLoggedInUsername(username); // Add this line
             navigateToView(root);
         } else if (employee instanceof ProjectManager) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/Views/project_manager/project_manager_view.fxml"));
             Parent root = loader.load();
             ProjectManagerViewController projectManagerController = loader.getController();
             projectManagerController.setLoggedInEmployee(employee);
+            projectManagerController.setLoggedInUsername(username); // Add this line
             navigateToView(root);
         } else if (employee instanceof Salesperson) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/Views/salesperson/salesperson_view.fxml"));
             Parent root = loader.load();
             SalespersonViewController salespersonController = loader.getController();
             salespersonController.setLoggedInEmployee(employee);
+            salespersonController.setLoggedInUsername(username); // Add this line
             navigateToView(root);
         }
     }
+
 
     private void navigateToView(Parent root) throws IOException {
         Scene scene = new Scene(root);

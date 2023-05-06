@@ -13,16 +13,14 @@ public class Documentation_DB {
         dbConnector = new DBConnector();
     }
 
-    public void saveDocumentation(int projectId, String layoutDrawing, String textDescription, String setupInformation) {
-        String query = "INSERT INTO Documentation (projectId, layoutDrawing, textDescription, setupInformation, isPrivateCustomer, createdAt, updatedAt) VALUES (?, ?, ?, ?, 0, GETDATE(), GETDATE())";
+    public void saveDocumentation(int projectId, byte[] pdfData) {
+        String query = "INSERT INTO Documentation (projectId, pdfData, isPrivateCustomer, createdAt, updatedAt) VALUES (?, ?, 0, GETDATE(), GETDATE())";
 
         try (Connection connection = dbConnector.getConnected();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, projectId);
-            preparedStatement.setString(2, layoutDrawing);
-            preparedStatement.setString(3, textDescription);
-            preparedStatement.setString(4, setupInformation);
+            preparedStatement.setBytes(2, pdfData);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
