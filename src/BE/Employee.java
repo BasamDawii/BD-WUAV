@@ -1,7 +1,9 @@
 package BE;
 
+import java.util.UUID;
+
 public interface Employee {
-    int getId();
+    UUID getId();
     String getUsername();
     String getPassword();
 }

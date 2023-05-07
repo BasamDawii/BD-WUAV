@@ -1,23 +1,25 @@
 package BE;
 
 
-public class ProjectManager implements Employee {
-    int id;
-    String username;
-    String password;
+import java.util.UUID;
 
-    public ProjectManager(int id, String username, String password) {
+public class ProjectManager implements Employee {
+    private UUID id;
+    private String username;
+    private String password;
+
+    public ProjectManager(UUID id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

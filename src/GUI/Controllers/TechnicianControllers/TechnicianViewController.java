@@ -1,6 +1,10 @@
 package GUI.Controllers.TechnicianControllers;
+
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
 
 import BE.Employee;
 import javafx.embed.swing.SwingFXUtils;
@@ -19,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +34,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.control.TextField;
 
 import javafx.scene.image.Image;
 
@@ -44,6 +50,13 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 public class TechnicianViewController implements Initializable {
 
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private ListView<String> searchResults;
+
+
     private Image drawnImage;
 
     @FXML
@@ -54,7 +67,7 @@ public class TechnicianViewController implements Initializable {
     }
 
     @FXML
-    private Documentation_DB documentationDb;
+    private final Documentation_DB documentationDb;
     @FXML
     private TextField projectNameField;
 
@@ -73,12 +86,51 @@ public class TechnicianViewController implements Initializable {
         documentationDb = new Documentation_DB();
 
     }
+    private String loggedInUsername;
+    private String loggedInPassword;
+
+    public void setLoggedInEmployee(Employee employee, String username, String password) {
+        this.loggedInEmployee = employee;
+        this.loggedInUsername = username;
+        this.loggedInPassword = password;
+        usernameLabel.setText("Logged in as: " + username);
+    }
+
+    private void addTextToPdf(PDPageContentStream contentStream, String text, float fontSize, float x, float y) throws IOException {
+        contentStream.setFont(PDType1Font.HELVETICA, fontSize);
+        contentStream.setLeading(fontSize * 1.2f);
+        contentStream.beginText();
+        contentStream.newLineAtOffset(x, y);
+
+        String[] lines = text.split("\n");
+        for (String line : lines) {
+            contentStream.showText(line.replace('\n', ' '));
+            contentStream.newLine();
+        }
+
+        contentStream.endText();
+    }
+
+
+
 
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
     }
 
-
+    @FXML
+    public void searchProject(ActionEvent event) {
+        String searchQuery = searchField.getText().trim();
+        if (!searchQuery.isEmpty()) {
+            try {
+                List<String> projectNames = documentationDb.searchProjectsByName(searchQuery);
+                ObservableList<String> observableList = FXCollections.observableArrayList(projectNames);
+                searchResults.setItems(observableList);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -108,13 +160,8 @@ public class TechnicianViewController implements Initializable {
 
         // Save the drawn content as a new Image
         drawnImage = paneToImage(savedImageArea);
-
-        // Create a combined image of the uploaded image and the drawn image
-        Image combinedImage = combineImages(editedImage, drawnImage);
-
-        // Set the ImageView to display the combined image
-        uploadedImageView.setImage(combinedImage);
     }
+
 
     private Image combineImages(Image backgroundImage, Image foregroundImage) {
         int width = (int) Math.max(backgroundImage.getWidth(), foregroundImage.getWidth());
@@ -162,12 +209,13 @@ public class TechnicianViewController implements Initializable {
             int projectId = saveProjectDescriptionToDatabase(projectName);
 
             // Save the PDF data to the database
-            documentationDb.saveDocumentation(projectId, pdfData);
+            savePdfToDatabase(projectId, pdfData);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private void addImageToPdf(PDDocument document, PDPageContentStream contentStream, Image image, float x, float y) throws IOException {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
@@ -190,6 +238,15 @@ public class TechnicianViewController implements Initializable {
         document.addPage(page);
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            // Add image to the PDF
+            addImageToPdf(document, contentStream, uploadedImageView.getImage(), 50, 680);
+
+            // Add drawn content to the PDF
+            if (drawnImage != null) {
+                float drawnImageYPosition = 680.0f - (float) drawnImage.getHeight(); // Adjust the Y position
+                addImageToPdf(document, contentStream, drawnImage, 50.0f, drawnImageYPosition);
+            }
+
             // Add text content to the PDF
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
@@ -203,28 +260,15 @@ public class TechnicianViewController implements Initializable {
             String text = textFieldArea.getText();
             String[] lines = text.split("\n");
             float leading = 14.0f; // Adjust this value based on your desired line spacing
-            float currentYPosition = 660; // Adjust this value to match the initial Y position of your text
 
             contentStream.setFont(PDType1Font.HELVETICA, 12);
-            contentStream.newLineAtOffset(0, currentYPosition);
 
             for (String line : lines) {
                 contentStream.showText(line);
-                currentYPosition -= leading;
                 contentStream.newLineAtOffset(0, -leading);
             }
 
             contentStream.endText();
-
-            // Add image to the PDF
-            addImageToPdf(document, contentStream, uploadedImageView.getImage(), 50, 500);
-
-            // Add drawn content to the PDF
-            if (drawnImage != null) {
-                addImageToPdf(document, contentStream, drawnImage, 50.0f, 500.0f);
-            }
-            addImageToPdf(document, contentStream, uploadedImageView.getImage(), 50, 500);
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -256,15 +300,12 @@ public class TechnicianViewController implements Initializable {
 
 
 
-
-
-
     private java.awt.Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {
         return new java.awt.Color((float) fxColor.getRed(), (float) fxColor.getGreen(), (float) fxColor.getBlue(), (float) fxColor.getOpacity());
     }
 
     private int saveProjectDescriptionToDatabase(String projectName) {
-        String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=BM_xm;user=YOUR_USERNAME;password=YOUR_PASSWORD;";
+        String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=BM_xm;user=" + loggedInUsername + ";password=" + loggedInPassword + ";";
         String insertProjectSQL = "INSERT INTO Project (projectName, projectDescription, startDate, customerId, projectManagerId) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection connection = DriverManager.getConnection(connectionString);
@@ -290,7 +331,21 @@ public class TechnicianViewController implements Initializable {
 
         return -1;
     }
+    private void savePdfToDatabase(int projectId, byte[] pdfData) {
+        String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=BM_xm;user=" + loggedInUsername + ";password=" + loggedInPassword + ";";
+        String insertPdfSQL = "INSERT INTO Documentation (projectId, pdfData) VALUES (?, ?);";
 
+        try (Connection connection = DriverManager.getConnection(connectionString);
+             PreparedStatement preparedStatement = connection.prepareStatement(insertPdfSQL)) {
+
+            preparedStatement.setInt(1, projectId);
+            preparedStatement.setBytes(2, pdfData);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

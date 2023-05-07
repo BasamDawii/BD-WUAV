@@ -1,24 +1,21 @@
 package BE;
 
+import java.util.UUID;
 
 public class Technician implements Employee {
-    private int id;
+    private UUID id;
     private String username;
     private String password;
 
-    public Technician(int id, String username, String password) {
+    public Technician(UUID id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public int getId() {
+    public UUID getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
@@ -26,16 +23,8 @@ public class Technician implements Employee {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
