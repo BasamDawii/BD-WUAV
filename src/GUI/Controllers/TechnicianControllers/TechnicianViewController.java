@@ -1,6 +1,9 @@
 package GUI.Controllers.TechnicianControllers;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 
 import BE.Employee;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,18 +13,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javafx.scene.image.Image;
 
 import DAL.Documentation_DB;
 
@@ -29,8 +38,14 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-public class TechnicianViewController {
+public class TechnicianViewController implements Initializable {
+
+    private Image drawnImage;
+
     @FXML
     private Label usernameLabel;
 
@@ -40,6 +55,7 @@ public class TechnicianViewController {
 
     @FXML
     private Documentation_DB documentationDb;
+    @FXML
     private TextField projectNameField;
 
     @FXML
@@ -80,14 +96,50 @@ public class TechnicianViewController {
         }
     }
 
-    public void setImagePaneContent(Image image, List<Node> nodes) {
-        this.uploadedImageView.setImage(image);
-        this.imagePaneNodes = nodes;
+    public void setImagePaneContent(Image editedImage, List<Node> drawnContent) {
+        // Set the uploaded image to the ImageView
+        uploadedImageView.setImage(editedImage);
+
+        // Clear any existing drawn content from the Pane
+        savedImageArea.getChildren().clear();
+
+        // Add the new drawn content to the Pane
+        savedImageArea.getChildren().addAll(drawnContent);
+
+        // Save the drawn content as a new Image
+        drawnImage = paneToImage(savedImageArea);
+
+        // Create a combined image of the uploaded image and the drawn image
+        Image combinedImage = combineImages(editedImage, drawnImage);
+
+        // Set the ImageView to display the combined image
+        uploadedImageView.setImage(combinedImage);
     }
 
-    public void SaveButton(ActionEvent event) {
-        projectNameField = new TextField();
+    private Image combineImages(Image backgroundImage, Image foregroundImage) {
+        int width = (int) Math.max(backgroundImage.getWidth(), foregroundImage.getWidth());
+        int height = (int) Math.max(backgroundImage.getHeight(), foregroundImage.getHeight());
+        BufferedImage combinedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = combinedImage.createGraphics();
 
+        // Draw the background image
+        graphics.drawImage(SwingFXUtils.fromFXImage(backgroundImage, null), 0, 0, null);
+
+        // Draw the foreground image (drawn content)
+        graphics.drawImage(SwingFXUtils.fromFXImage(foregroundImage, null), 0, 0, null);
+
+        graphics.dispose();
+
+        return SwingFXUtils.toFXImage(combinedImage, null);
+    }
+
+    private Image paneToImage(Pane pane) {
+        WritableImage image = new WritableImage((int) pane.getWidth(), (int) pane.getHeight());
+        pane.snapshot(null, image);
+        return image;
+    }
+
+    public void uploadToCloud(ActionEvent event) {
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
@@ -112,7 +164,80 @@ public class TechnicianViewController {
             // Save the PDF data to the database
             documentationDb.saveDocumentation(projectId, pdfData);
 
-            // Save the PDF document to a file (Optional)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addImageToPdf(PDDocument document, PDPageContentStream contentStream, Image image, float x, float y) throws IOException {
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+        PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
+        contentStream.drawImage(pdImage, x, y, pdImage.getWidth() / 2, pdImage.getHeight() / 2);
+    }
+
+
+    private void addDrawnContentToPdf(PDPageContentStream contentStream) throws IOException {
+        // Example: Draw a simple rectangle
+        contentStream.setNonStrokingColor(Color.BLACK);
+        contentStream.addRect(50, 300, 100, 50);
+        contentStream.fill();
+        // Implement your own logic for adding the drawn content
+    }
+
+    public void saveToLocal(ActionEvent event) {
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            // Add text content to the PDF
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(50, 400);
+            contentStream.showText("Project Name: " + projectNameField.getText());
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Project Description: ");
+            contentStream.newLineAtOffset(0, -20);
+
+            // Split the text from textFieldArea into lines
+            String text = textFieldArea.getText();
+            String[] lines = text.split("\n");
+            float leading = 14.0f; // Adjust this value based on your desired line spacing
+            float currentYPosition = 660; // Adjust this value to match the initial Y position of your text
+
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.newLineAtOffset(0, currentYPosition);
+
+            for (String line : lines) {
+                contentStream.showText(line);
+                currentYPosition -= leading;
+                contentStream.newLineAtOffset(0, -leading);
+            }
+
+            contentStream.endText();
+
+            // Add image to the PDF
+            addImageToPdf(document, contentStream, uploadedImageView.getImage(), 50, 500);
+
+            // Add drawn content to the PDF
+            if (drawnImage != null) {
+                addImageToPdf(document, contentStream, drawnImage, 50.0f, 500.0f);
+            }
+            addImageToPdf(document, contentStream, uploadedImageView.getImage(), 50, 500);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // Save the PDF document in memory
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            document.save(outputStream);
+            byte[] pdfData = outputStream.toByteArray();
+            document.close();
+
+            // Save the PDF document to a file
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save PDF");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
@@ -128,6 +253,9 @@ public class TechnicianViewController {
             e.printStackTrace();
         }
     }
+
+
+
 
 
 
@@ -164,4 +292,8 @@ public class TechnicianViewController {
     }
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }

@@ -1,9 +1,10 @@
 package BE;
 
+
 public class Salesperson implements Employee {
-    int id;
-    String username;
-    String password;
+    private int id;
+    private String username;
+    private String password;
 
     public Salesperson(int id, String username, String password) {
         this.id = id;
