@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="300.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.Editpic">
+<AnchorPane prefHeight="300.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.EditPic">
 
     <ImageView fx:id="uploadedImageView" fitWidth="114.0" />
     <Pane fx:id="imagePane" />

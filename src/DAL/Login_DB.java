@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 public class Login_DB {
     private DBConnector dbConnector;
@@ -29,7 +28,7 @@ public class Login_DB {
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-                UUID id = UUID.fromString(result.getString("id"));
+                int id = result.getInt("id");
                 String employeeType = result.getString("employeeType");
 
                 switch (employeeType) {

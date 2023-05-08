@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class LoginController implements Initializable {
     @FXML
     private TextField usernameTXT;
@@ -50,35 +49,37 @@ public class LoginController implements Initializable {
         Employee employee = loginModel.employeeLogin(username, password);
 
         if (employee instanceof Technician) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/Views/technician/technician_view.fxml"));
-            Parent root = loader.load();
-            TechnicianViewController technicianController = loader.getController();
-            technicianController.setLoggedInEmployee(employee);
-            technicianController.setLoggedInUsername(username); // Add this line
-            navigateToView(root);
+            navigateToView("/GUI/Views/technician/technician_view.fxml", employee);
         } else if (employee instanceof ProjectManager) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/Views/project_manager/project_manager_view.fxml"));
-            Parent root = loader.load();
-            ProjectManagerViewController projectManagerController = loader.getController();
-            projectManagerController.setLoggedInEmployee(employee);
-            projectManagerController.setLoggedInUsername(username); // Add this line
-            navigateToView(root);
+            navigateToView("/GUI/Views/project_manager/project_manager_view.fxml", employee);
         } else if (employee instanceof Salesperson) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/Views/salesperson/salesperson_view.fxml"));
-            Parent root = loader.load();
-            SalespersonViewController salespersonController = loader.getController();
-            salespersonController.setLoggedInEmployee(employee);
-            salespersonController.setLoggedInUsername(username); // Add this line
-            navigateToView(root);
+            navigateToView("/GUI/Views/salesperson/salesperson_view.fxml", employee);
+        } else {
+            // Show an error message if the login is unsuccessful
+            // ...
         }
     }
 
 
-    private void navigateToView(Parent root) throws IOException {
+    private void navigateToView(String viewPath, Employee employee) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) usernameTXT.getScene().getWindow();
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
+        if (employee instanceof Technician) {
+            TechnicianViewController technicianViewController = loader.getController();
+            technicianViewController.setLoggedInEmployee(employee);
+        } else if (employee instanceof ProjectManager) {
+            ProjectManagerViewController projectManagerViewController = loader.getController();
+            projectManagerViewController.setLoggedInEmployee(employee);
+        } else if (employee instanceof Salesperson) {
+            SalespersonViewController salespersonViewController = loader.getController();
+            salespersonViewController.setLoggedInEmployee(employee);
+        }
     }
+
 }

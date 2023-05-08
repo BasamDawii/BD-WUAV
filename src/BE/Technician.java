@@ -1,20 +1,18 @@
 package BE;
 
-import java.util.UUID;
-
 public class Technician implements Employee {
-    private UUID id;
-    private String username;
-    private String password;
+    int id;
+    String username;
+    String password;
 
-    public Technician(UUID id, String username, String password) {
+    public Technician(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

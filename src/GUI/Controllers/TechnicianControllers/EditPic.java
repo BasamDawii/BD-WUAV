@@ -1,4 +1,6 @@
 package GUI.Controllers.TechnicianControllers;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -10,11 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,7 +19,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Editpic implements Initializable {
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+public class EditPic implements Initializable {
+
     @FXML
     private Button exampleButton, saveimage;
 
@@ -45,14 +48,29 @@ public class Editpic implements Initializable {
     }
 
     public void uploadPictures() {
-        FileChooser fileChooser = createFileChooser();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Pictures");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+
         File picture = fileChooser.showOpenDialog(exampleButton.getScene().getWindow());
 
         if (picture != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(picture);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                ImageView imageView = createImageView(image);
+
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(150);
+                imageView.setFitHeight(150);
+
+                imageView.setOnMouseDragged((MouseEvent event) -> {
+                    mouseX = event.getX();
+                    mouseY = event.getY();
+                    imageView.setX(mouseX);
+                    imageView.setY(mouseY);
+                });
+
                 imagePane.getChildren().add(imageView);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -64,50 +82,6 @@ public class Editpic implements Initializable {
     }
 
     public void drawButton(ActionEvent event) {
-        toggleDrawingMode();
-    }
-
-    private void startDrawing(MouseEvent event) {
-        drawCircle(event.getX(), event.getY());
-    }
-
-    private void continueDrawing(MouseEvent event) {
-        drawCircle(event.getX(), event.getY());
-    }
-
-    private void stopDrawing(MouseEvent event) {
-    }
-
-    public void saveImageToProgram(ActionEvent event) {
-        Image editedImage = getEditedImage();
-        if (editedImage != null && technicianViewController != null) {
-            technicianViewController.setImagePaneContent(editedImage, imagePane.getChildren());
-        }
-        closeWindow();
-    }
-
-    private FileChooser createFileChooser() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Pictures");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
-        return fileChooser;
-    }
-
-    private ImageView createImageView(Image image) {
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(150);
-        imageView.setFitHeight(150);
-        imageView.setOnMouseDragged((MouseEvent event) -> {
-            mouseX = event.getX();
-            mouseY = event.getY();
-            imageView.setX(mouseX);
-            imageView.setY(mouseY);
-        });
-        return imageView;
-    }
-
-    private void toggleDrawingMode() {
         isDrawing = !isDrawing; // Toggle the drawing flag
 
         if (isDrawing) {
@@ -122,22 +96,43 @@ public class Editpic implements Initializable {
             imagePane.setOnMouseReleased(null);
         }
     }
+    private void startDrawing(MouseEvent event) {
+        double x = event.getX();
+        double y = event.getY();
 
-    private void drawCircle(double x, double y) {
         Circle circle = new Circle(x, y, 5, Color.BLACK);
         imagePane.getChildren().add(circle);
     }
 
-    private Image getEditedImage() {
-        Image editedImage = null;
-        if (!imagePane.getChildren().isEmpty() && imagePane.getChildren().get(0) instanceof ImageView) {
-            editedImage = ((ImageView) imagePane.getChildren().get(0)).getImage();
-        }
-        return editedImage;
+    private void continueDrawing(MouseEvent event) {
+        double x = event.getX();
+        double y = event.getY();
+
+        Circle circle = new Circle(x, y, 5, Color.BLACK);
+        imagePane.getChildren().add(circle);
     }
 
-    private void closeWindow() {
+    private void stopDrawing(MouseEvent event) {
+        // You can add any additional logic here if needed
+    }
+
+
+
+    public void saveImageToProgram(ActionEvent event) {
+        // Convert imagePane to a single Image
+        WritableImage combinedImage = new WritableImage((int) imagePane.getWidth(), (int) imagePane.getHeight());
+        SnapshotParameters snapshotParameters = new SnapshotParameters();
+        snapshotParameters.setFill(Color.TRANSPARENT);
+        imagePane.snapshot(snapshotParameters, combinedImage);
+
+        // Pass the edited image to TechnicianViewController
+        if (technicianViewController != null) {
+            technicianViewController.setImagePaneContent(combinedImage);
+        }
+
+        // Close the window
         Stage stage = (Stage) saveimage.getScene().getWindow();
         stage.close();
     }
+
 }
