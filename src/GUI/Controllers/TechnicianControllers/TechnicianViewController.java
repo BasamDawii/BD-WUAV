@@ -65,7 +65,8 @@ public class TechnicianViewController {
     }
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
-        usernameLabel.setText("Logged in as: " + employee.getUsername());
+        usernameLabel.setText( employee.getUsername());
+        usernameLabel.setTranslateX(65);
     }
 
 

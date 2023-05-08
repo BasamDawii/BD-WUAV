@@ -113,6 +113,7 @@ public class ProjectManagerViewController {
 
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
-        usernameLabel.setText("Logged in as: " + employee.getUsername());
+        usernameLabel.setText(employee.getUsername());
+        usernameLabel.setTranslateX(60);
     }
 }

@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
@@ -11,9 +13,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.SplitPane?>
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1132.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController" >
+<?import javafx.scene.control.Label?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1132.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -22,18 +23,20 @@
                   <Image url="@../Image/manager_96px.png" />
                </image>
                <VBox.margin>
-                  <Insets left="120.0" top="40.0" />
+                  <Insets left="80.0" top="40.0" />
                </VBox.margin>
             </ImageView>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName">
-               <font>
-                  <Font size="20.0" />
-               </font>
+            <Label fx:id="usernameLabel" text="Username:" textFill="WHITE">
                <VBox.margin>
-                  <Insets left="110.0" />
+                  <Insets />
                </VBox.margin>
-            </Text>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="View all projects" textFill="WHITE" onAction="#viewAllProject" >
+               <padding>
+                  <Insets left="45.0" />
+               </padding>
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Button mnemonicParsing="false" onAction="#viewAllProject" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="View all projects" textFill="WHITE">
                <VBox.margin>
                   <Insets top="130.0" />
                </VBox.margin>
@@ -41,11 +44,11 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="Add a technician to an project" textFill="WHITE" onAction="#addTechnician" >
+            <Button mnemonicParsing="false" onAction="#addTechnician" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="Add a technician to an project" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="Sign out" textFill="WHITE" onAction="#handleLogoutButton" >
+            <Button mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="Sign out" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font></Button>
@@ -54,7 +57,7 @@
       <TableView fx:id="tableView" prefHeight="703.0" prefWidth="832.0" visible="false">
         <columns>
           <TableColumn fx:id="projectName" prefWidth="94.33334350585938" text="Project Name" />
-          <TableColumn  fx:id="projectDesc" minWidth="0.0" prefWidth="154.6666259765625" text="Project Description" />
+          <TableColumn fx:id="projectDesc" minWidth="0.0" prefWidth="154.6666259765625" text="Project Description" />
             <TableColumn fx:id="startDate" prefWidth="92.66668701171875" text="Start Date" />
             <TableColumn fx:id="endDate" prefWidth="151.0" text="End Date" />
             <TableColumn fx:id="customerName" prefWidth="119.0" text="Customer Name" />
@@ -70,15 +73,15 @@
                      </font>
 
                   </Text>
-                  <ComboBox fx:id="comboBox1" prefWidth="150.0"/>
+                  <ComboBox fx:id="comboBox1" prefWidth="150.0" />
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Technicians">
                      <font>
                         <Font size="18.0" />
                      </font>
 
                   </Text>
-                  <ComboBox fx:id="comboBox2" prefWidth="150.0"/>
-                  <Button mnemonicParsing="false" text="Add" textFill="#222121" onAction="#confirmTechnician"/>
+                  <ComboBox fx:id="comboBox2" prefWidth="150.0" />
+                  <Button mnemonicParsing="false" onAction="#confirmTechnician" text="Add" textFill="#222121" />
                </children>
             </VBox>
          </items>
