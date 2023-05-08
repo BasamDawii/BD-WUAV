@@ -13,5 +13,7 @@
     <orderEntry type="library" name="apache.pdfbox" level="project" />
     <orderEntry type="library" name="imgscalr.lib" level="project" />
     <orderEntry type="library" name="imgscalr.lib1" level="project" />
+    <orderEntry type="library" name="itextpdf.tool.xmlworker" level="project" />
+    <orderEntry type="library" name="itextpdf.tool.xmlworker1" level="project" />
   </component>
 </module>

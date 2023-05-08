@@ -168,4 +168,49 @@ public class TechnicianViewController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void SaveLocal(ActionEvent actionEvent) {
+// Create a new PDF document
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            // Save the image and drawings to the PDF
+            Image image = uploadedImageView.getImage();
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+            PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
+            contentStream.drawImage(pdImage, 50, 450, 500, 300); // Adjust the position and size as needed
+
+            // Save the text to the PDF
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(50, 400); // Adjust the position as needed
+            String text = textFieldArea.getText();
+            String[] lines = text.split("\n");
+            for (String line : lines) {
+                contentStream.showText(line);
+                contentStream.newLineAtOffset(0, -14); // Adjust the line spacing as needed
+            }
+            contentStream.endText();
+            contentStream.close();
+
+            // Save the PDF document
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            File file = fileChooser.showSaveDialog(savedImageArea.getScene().getWindow());
+            if (file != null) {
+                document.save(file);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            document.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
