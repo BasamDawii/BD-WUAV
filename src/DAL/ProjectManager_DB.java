@@ -1,6 +1,7 @@
 package DAL;
 
-import BE.*;
+import BE.Project;
+import BE.ProjectDetails;
 import DAL.database.DBConnector;
 
 import java.sql.*;

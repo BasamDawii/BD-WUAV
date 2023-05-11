@@ -1,14 +1,12 @@
 package GUI.Models;
 
-import BE.Employee;
 import BE.ProjectDetails;
-import BLL.LoginManager;
 import DAL.ProjectManager_DB;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.util.ArrayList;
 
 public class ProjectManagerModel {
+
 
     public ArrayList<ProjectDetails> loadData(){
         ProjectManager_DB projectManager_db = new ProjectManager_DB();

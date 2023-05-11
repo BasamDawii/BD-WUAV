@@ -1,9 +1,6 @@
 package GUI.Models;
 
 import BE.Employee;
-import BE.ProjectManager;
-import BE.Salesperson;
-import BE.Technician;
 import BLL.LoginManager;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 

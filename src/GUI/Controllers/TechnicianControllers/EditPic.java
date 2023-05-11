@@ -1,28 +1,31 @@
 package GUI.Controllers.TechnicianControllers;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class EditPic implements Initializable {
 
@@ -31,6 +34,8 @@ public class EditPic implements Initializable {
 
     @FXML
     private Pane imagePane;
+    @FXML
+    private Pane iconPane;
 
     private double mouseX;
     private double mouseY;
@@ -41,7 +46,89 @@ public class EditPic implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         technicianViewController = fxmlLoader.getController();
+
+        createIcon("mic.png");
+        createIcon("projectors.png");
+        createIcon("speaker.png");
+        // Add more icons as needed
+        imagePane.setMouseTransparent(false);
+        enableDragAndDrop(); // Add this line to enable drag and drop functionality
     }
+
+
+
+    private void enableDrag(ImageView imageView) {
+        imageView.setOnDragDetected(event -> {
+            Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
+
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(imageView.getImage());
+            db.setContent(content);
+
+            event.consume();
+        });
+    }
+
+
+    private void enableDragAndDrop() {
+        imagePane.setOnDragOver(event -> {
+            if (event.getGestureSource() != imagePane && event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+
+        imagePane.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasImage()) {
+                ImageView imageView;
+
+                if (event.getGestureSource() instanceof ImageView && ((ImageView) event.getGestureSource()).getParent() == iconPane) {
+                    // Clone the icon if the drag originated from the iconPane
+                    String imagePath = ((ImageView) event.getGestureSource()).getId();
+                    URL imageUrl = getClass().getResource("/GUI/Views/Image/" + imagePath);
+                    imageView = new ImageView(new Image(imageUrl.toExternalForm()));
+                } else {
+                    imageView = (ImageView) event.getGestureSource();
+                }
+
+                // Set the size of the dropped image
+                imageView.setFitWidth(35);
+                imageView.setFitHeight(35);
+
+                double dropX = event.getX() - imageView.getFitWidth() / 2;
+                double dropY = event.getY() - imageView.getFitHeight() / 2;
+
+                imageView.setLayoutX(dropX);
+                imageView.setLayoutY(dropY);
+
+                enableDrag(imageView); // Enable dragging for the dropped ImageView
+                imagePane.getChildren().add(imageView);
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+
+
+    }
+
+    private void createIcon(String imagePath) {
+        URL imageUrl = getClass().getResource("/GUI/Views/Image/" + imagePath);
+        ImageView imageView = new ImageView(new Image(imageUrl.toExternalForm()));
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        iconPane.getChildren().add(imageView);
+
+        imageView.setId(imagePath); // Set a unique identifier for each icon
+        enableDrag(imageView); // Enable dragging for the icon ImageView
+    }
+
+
+
+
 
     public void setTechnicianViewController(TechnicianViewController technicianViewController) {
         this.technicianViewController = technicianViewController;
@@ -64,11 +151,23 @@ public class EditPic implements Initializable {
                 imageView.setFitWidth(150);
                 imageView.setFitHeight(150);
 
-                imageView.setOnMouseDragged((MouseEvent event) -> {
+                imageView.setOnMousePressed(event -> {
                     mouseX = event.getX();
                     mouseY = event.getY();
-                    imageView.setX(mouseX);
-                    imageView.setY(mouseY);
+                });
+
+                imageView.setOnMouseDragged(event -> {
+                    double offsetX = event.getSceneX() - mouseX;
+                    double offsetY = event.getSceneY() - mouseY;
+                    imageView.setTranslateX(offsetX);
+                    imageView.setTranslateY(offsetY);
+                });
+
+                imageView.setOnMouseReleased(event -> {
+                    imageView.setLayoutX(imageView.getLayoutX() + imageView.getTranslateX());
+                    imageView.setLayoutY(imageView.getLayoutY() + imageView.getTranslateY());
+                    imageView.setTranslateX(0);
+                    imageView.setTranslateY(0);
                 });
 
                 imagePane.getChildren().add(imageView);
@@ -77,6 +176,9 @@ public class EditPic implements Initializable {
             }
         }
     }
+
+
+
 
     public void saveImage(ActionEvent event) {
     }

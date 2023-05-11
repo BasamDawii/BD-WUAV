@@ -4,7 +4,6 @@ import BE.Employee;
 import BE.ProjectManager;
 import BE.Salesperson;
 import BE.Technician;
-import BLL.LoginManager;
 import GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController;
 import GUI.Controllers.SalespersonControllers.SalespersonViewController;
 import GUI.Controllers.TechnicianControllers.TechnicianViewController;

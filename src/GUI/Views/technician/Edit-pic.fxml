@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="300.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.EditPic">
-
-    <ImageView fx:id="uploadedImageView" fitWidth="114.0" />
-    <Pane fx:id="imagePane" />
-   <ToolBar prefHeight="35.0" prefWidth="920.0">
-      <items>
-          <Button fx:id="exampleButton" onAction="#uploadPictures" text="Upload Image" />
-         <Button mnemonicParsing="false" onAction="#drawButton" text="Draw" />
-          <Button fx:id="saveimage" mnemonicParsing="false" onAction="#saveImageToProgram" text="Save the Image" />
-      </items>
-   </ToolBar>
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.EditPic">
+    <SplitPane dividerPositions="0.25" prefHeight="400.0" prefWidth="600.0">
+        <items>
+            <VBox fx:id="iconPane" spacing="10.0" />
+            <Pane fx:id="imagePane" />
+        </items>
+    </SplitPane>
+    <ToolBar prefHeight="35.0" prefWidth="920.0">
+        <items>
+            <Button fx:id="exampleButton" onAction="#uploadPictures" text="Upload Image" />
+            <Button mnemonicParsing="false" onAction="#drawButton" text="Draw" />
+            <Button fx:id="saveimage" mnemonicParsing="false" onAction="#saveImageToProgram" text="Save the Image" />
+        </items>
+    </ToolBar>
 </AnchorPane>

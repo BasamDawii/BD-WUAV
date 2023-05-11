@@ -1,9 +1,6 @@
 package BLL;
 
 import BE.Employee;
-import BE.ProjectManager;
-import BE.Salesperson;
-import BE.Technician;
 import DAL.Login_DB;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 

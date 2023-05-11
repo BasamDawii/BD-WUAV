@@ -1,7 +1,8 @@
 package GUI.Controllers.ProjectManagerControllers;
 
 
-import BE.*;
+import BE.Employee;
+import BE.ProjectDetails;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
@@ -14,10 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ProjectManagerViewController {
     private Employee loggedInEmployee;

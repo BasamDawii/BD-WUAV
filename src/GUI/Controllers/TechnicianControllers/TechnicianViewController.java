@@ -1,8 +1,11 @@
 package GUI.Controllers.TechnicianControllers;
 
 import BE.Employee;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,32 +13,40 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.*;
 public class TechnicianViewController {
 
+    public TextField projectNameTXT;
+    public TextField projectDisTXT;
+    public DatePicker startDateTXT;
+    public DatePicker endDateTXT;
+    public TextField customerNameTXT;
     @FXML
     private Pane savedImageArea;
     @FXML
@@ -74,84 +85,43 @@ public class TechnicianViewController {
         uploadedImageView.setImage(combinedImage);
     }
 
+    public void generatePdf(String projectDescription, LocalDate startDate, LocalDate endDate, String customerName) throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            PdfWriter pdfWriter = new PdfWriter(outputStream);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument);
 
-    public void SaveButton(ActionEvent event) {
-//        PDDocument document = new PDDocument();
-//        PDPage page = new PDPage(PDRectangle.A4);
-//        document.addPage(page);
-//
-//        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-//            PDFont font = PDType1Font.HELVETICA;
-//            contentStream.setFont(PDType1Font.HELVETICA, 12);
-//
-//            // Save images and drawings to the PDF
-//            if (imagePaneNodes != null && !imagePaneNodes.isEmpty()) {
-//                for (Node node : imagePaneNodes) {
-//                    if (node instanceof ImageView) {
-//                        ImageView imageView = (ImageView) node;
-//
-//                        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
-//                        float x = (float) imageView.getX();
-//                        float y = page.getMediaBox().getHeight() - (float) imageView.getY() - (float) imageView.getFitHeight();
-//
-//                        PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
-//                        contentStream.drawImage(pdImage, x, y, (float) imageView.getFitWidth(), (float) imageView.getFitHeight());
-//                    } else if (node instanceof Circle) {
-//                        Circle circle = (Circle) node;
-//
-//                        float x = (float) circle.getCenterX();
-//                        float y = page.getMediaBox().getHeight() - (float) circle.getCenterY();
-//                        float radius = (float) circle.getRadius();
-//                        float k = 0.5522847498f;
-//
-//                        contentStream.setNonStrokingColor(javaFXColorToAWTColor((javafx.scene.paint.Color) circle.getFill()));
-//                        contentStream.moveTo(x + radius, y);
-//                        contentStream.curveTo(x + radius, y + radius * k, x + radius * k, y + radius, x, y + radius);
-//                        contentStream.curveTo(x - radius * k, y + radius, x - radius, y + radius * k, x - radius, y);
-//                        contentStream.curveTo(x - radius, y - radius * k, x - radius * k, y - radius, x, y - radius);
-//                        contentStream.curveTo(x + radius * k, y - radius, x + radius, y - radius * k, x + radius, y);
-//                        contentStream.fill();
-//                    }
-//                }
-//            }
-//
-//            // Save the text to the PDF (At the bottom)
-//            contentStream.beginText();
-//            contentStream.setFont(PDType1Font.HELVETICA, 12);
-//
-//            String text = textFieldArea.getText();
-//            String[] lines = text.split("\n");
-//            float margin = 25;
-//            float lineHeight = 14;
-//            float yPosition = 50;
-//
-//            for (int i = 0; i < lines.length; i++) {
-//                contentStream.newLineAtOffset(margin, yPosition - (i * lineHeight));
-//                contentStream.showText(lines[i]);
-//                contentStream.newLineAtOffset(-margin, 0);
-//            }
-//
-//            contentStream.endText();
-//            contentStream.close();
-//
-//            // Save the PDF document
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Save PDF");
-//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-//            File file = fileChooser.showSaveDialog(savedImageArea.getScene().getWindow());
-//            if (file != null) {
-//                document.save(file);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            document.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+            // Add project information to the PDF
+            document.add(new Paragraph("Project Description: " + projectDescription));
+            document.add(new Paragraph("Start Date: " + startDate));
+            document.add(new Paragraph("End Date: " + endDate));
+            document.add(new Paragraph("Customer Name: " + customerName));
+
+            document.close();
+
+            // Save the generated PDF to a file
+            Path tempPdfFile = Files.createTempFile("project-", ".pdf");
+            try (FileOutputStream fileOutputStream = new FileOutputStream(tempPdfFile.toFile())) {
+                outputStream.writeTo(fileOutputStream);
+            }
+        }
+
     }
+    public void saveButton(ActionEvent event) {
+        // Get the project information from the input fields
+        String projectDescription = projectDisTXT.getText();
+        LocalDate startDate = startDateTXT.getValue();
+        LocalDate endDate = endDateTXT.getValue();
+        String customerName = customerNameTXT.getText();
+
+        // Generate the PDF
+        try {
+            generatePdf(projectDescription, startDate, endDate, customerName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {
         return new Color((float) fxColor.getRed(), (float) fxColor.getGreen(), (float) fxColor.getBlue(), (float) fxColor.getOpacity());
@@ -170,7 +140,7 @@ public class TechnicianViewController {
     }
 
     public void SaveLocal(ActionEvent actionEvent) {
-// Create a new PDF document
+        // Create a new PDF document
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
@@ -182,10 +152,22 @@ public class TechnicianViewController {
             PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
             contentStream.drawImage(pdImage, 50, 450, 500, 300); // Adjust the position and size as needed
 
-            // Save the text to the PDF
+            // Save the project information to the PDF
             contentStream.setFont(PDType1Font.HELVETICA, 12);
             contentStream.beginText();
             contentStream.newLineAtOffset(50, 400); // Adjust the position as needed
+            contentStream.showText("Project Name: " + projectNameTXT.getText());
+            contentStream.newLineAtOffset(0, -14); // Adjust the line spacing as needed
+            contentStream.showText("Project Description: " + projectDisTXT.getText());
+            contentStream.newLineAtOffset(0, -14);
+            contentStream.showText("Start Date: " + startDateTXT.getValue());
+            contentStream.newLineAtOffset(0, -14);
+            contentStream.showText("End Date: " + endDateTXT.getValue());
+            contentStream.newLineAtOffset(0, -14);
+            contentStream.showText("Customer Name: " + customerNameTXT.getText());
+            contentStream.newLineAtOffset(0, -14);
+
+            // Save the text to the PDF
             String text = textFieldArea.getText();
             String[] lines = text.split("\n");
             for (String line : lines) {
@@ -213,4 +195,5 @@ public class TechnicianViewController {
             e.printStackTrace();
         }
     }
+
 }
