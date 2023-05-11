@@ -1,6 +1,7 @@
 package GUI.Controllers.TechnicianControllers;
 
 import BE.Employee;
+import DAL.ProjectManager_DB;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -41,6 +42,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 public class TechnicianViewController {
+    private ProjectManager_DB projectManagerDb;
 
     public TextField projectNameTXT;
     public TextField projectDisTXT;
@@ -74,6 +76,10 @@ public class TechnicianViewController {
             e.printStackTrace();
         }
     }
+    public TechnicianViewController() {
+        projectManagerDb = new ProjectManager_DB();
+    }
+
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
         usernameLabel.setText( employee.getUsername());
@@ -85,7 +91,7 @@ public class TechnicianViewController {
         uploadedImageView.setImage(combinedImage);
     }
 
-    public void generatePdf(String projectDescription, LocalDate startDate, LocalDate endDate, String customerName) throws IOException {
+    public byte[] generatePdf(String projectDescription, LocalDate startDate, LocalDate endDate, String customerName) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             PdfWriter pdfWriter = new PdfWriter(outputStream);
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
@@ -104,11 +110,13 @@ public class TechnicianViewController {
             try (FileOutputStream fileOutputStream = new FileOutputStream(tempPdfFile.toFile())) {
                 outputStream.writeTo(fileOutputStream);
             }
+            return outputStream.toByteArray();
         }
 
     }
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
+        String projectName = projectNameTXT.getText();
         String projectDescription = projectDisTXT.getText();
         LocalDate startDate = startDateTXT.getValue();
         LocalDate endDate = endDateTXT.getValue();
@@ -116,11 +124,16 @@ public class TechnicianViewController {
 
         // Generate the PDF
         try {
-            generatePdf(projectDescription, startDate, endDate, customerName);
+            byte[] pdfData = generatePdf(projectDescription, startDate, endDate, customerName);
+
+            // Save the generated PDF to the database
+            projectManagerDb.savePdfToDatabase(projectName, projectDescription, startDate, endDate, customerName, pdfData);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
     private Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {

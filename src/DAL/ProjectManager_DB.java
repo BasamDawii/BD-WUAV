@@ -5,6 +5,7 @@ import BE.ProjectDetails;
 import DAL.database.DBConnector;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,6 +15,50 @@ public class ProjectManager_DB {
     public ProjectManager_DB() {
         dbConnector = new DBConnector();
     }
+
+    public void savePdfToDatabase(String projectName, String projectDescription, LocalDate startDate, LocalDate endDate, String customerName, byte[] pdfData) {
+        String insertProjectSql = "INSERT INTO Project (projectName, projectDescription, startDate, endDate, customerId) VALUES (?, ?, ?, ?, (SELECT id FROM Customer WHERE name = ?))";
+        String insertDocumentationSql = "INSERT INTO Documentation (docId, custId, pdfFile) VALUES (?, (SELECT id FROM Customer WHERE name = ?), ?)";
+
+        try (Connection connection = dbConnector.getConnected()) {
+            connection.setAutoCommit(false);
+
+            // Insert project details into Project table
+            try (PreparedStatement pstmt = connection.prepareStatement(insertProjectSql, Statement.RETURN_GENERATED_KEYS)) {
+                pstmt.setString(1, projectName);
+                pstmt.setString(2, projectDescription);
+                pstmt.setDate(3, java.sql.Date.valueOf(startDate));
+                pstmt.setDate(4, java.sql.Date.valueOf(endDate));
+                pstmt.setString(5, customerName);
+
+                pstmt.executeUpdate();
+
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int projectId = generatedKeys.getInt(1);
+
+                        // Insert PDF data into Documentation table
+                        try (PreparedStatement pstmt2 = connection.prepareStatement(insertDocumentationSql)) {
+                            pstmt2.setInt(1, projectId);
+                            pstmt2.setString(2, customerName);
+                            pstmt2.setBytes(3, pdfData);
+
+                            pstmt2.executeUpdate();
+                        }
+                    } else {
+                        throw new SQLException("Creating project failed, no ID obtained.");
+                    }
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            // Handle the exception appropriately, for example, log it or rethrow it.
+            throw new RuntimeException("Error while trying to save PDF to the database.", e);
+        }
+    }
+
+
 
     public void deletePDF(Project project) {
         String sql = "DELETE FROM Projects WHERE id = ?";
@@ -82,6 +127,8 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while retrieving Data.", e);
         }
     }
+
+
     public boolean addTechnicianToProject(int pid, int tid){
         String query = "Insert into Project_Employee(projectId, employeeId) VALUES(?,?)";
         try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(query)) {
