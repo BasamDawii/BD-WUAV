@@ -9,7 +9,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class ProjectManager_DB {
     private DBConnector dbConnector;
@@ -76,8 +76,8 @@ public class ProjectManager_DB {
     public void saveDocToDataBase(Documentation documentation){
         String sql = "INSERT INTO Documentation (startDate, endDate, pdfFile, projectId) VALUES (?, ?, ?, ?)";
         try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setDate(1, documentation.getStartDate());
-            statement.setDate(2, documentation.getEndDate());
+            statement.setDate(1, Date.valueOf(documentation.getStartDate()));
+            statement.setDate(2, Date.valueOf(documentation.getEndDate()));
             statement.setString(3, documentation.getPdfData());
             statement.setInt(4, documentation.getProjectId());
 

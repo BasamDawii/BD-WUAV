@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -115,6 +116,8 @@ public class TechnicianViewController {
         }
 
     }
+
+
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
 
@@ -126,9 +129,9 @@ public class TechnicianViewController {
         // Generate the PDF
         try {
             byte[] pdfData = generatePdf(projectDescription, startDate, endDate, customerName);
-            Documentation documentation = new Documentation(startDate, endDate, pdfFile, 1);
+            Documentation documentation = new Documentation(0,startDate, endDate,  1,new String(pdfData, StandardCharsets.UTF_8));
             // Save the generated PDF to the database
-            projectManagerDb.saveDocToDataBase( );
+            projectManagerDb.saveDocToDataBase( documentation);
 
             // Display a success message
             showAlert(Alert.AlertType.INFORMATION, "Success", "Project details and PDF saved successfully!");

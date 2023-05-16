@@ -1,16 +1,17 @@
 package BE;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Documentation {
     private int id;
     private int  projectId;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private String pdfData;
 
-    public Documentation(int id, Date startDate,Date endDate,int projectId, String pdfData) {
+    public Documentation(int id, LocalDate startDate,LocalDate endDate,int projectId, String pdfData) {
         this.id = id;
         this.startDate = startDate;
         this.projectId = projectId;
@@ -36,19 +37,19 @@ public class Documentation {
 
 
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }
