@@ -1,8 +1,10 @@
 package DAL;
 
+import BE.Documentation;
 import BE.Project;
 import BE.ProjectDetails;
 import DAL.database.DBConnector;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -17,11 +19,25 @@ public class ProjectManager_DB {
     }
 
     public void savePdfToDatabase(String projectName, String projectDescription, LocalDate startDate, LocalDate endDate, String customerName, byte[] pdfData) {
-        String insertProjectSql = "INSERT INTO Project (projectName, projectDescription, startDate, endDate, customerId) VALUES (?, ?, ?, ?, (SELECT id FROM Customer WHERE name = ?))";
+        String selectCustomerIdSql = "SELECT id FROM Customer WHERE name = ?";
+        String insertProjectSql = "INSERT INTO Project (projectName, projectDescription, startDate, endDate, customerId) VALUES (?, ?, ?, ?, ?)";
         String insertDocumentationSql = "INSERT INTO Documentation (docId, custId, pdfFile) VALUES (?, (SELECT id FROM Customer WHERE name = ?), ?)";
+        int customerId = -1;
 
         try (Connection connection = dbConnector.getConnected()) {
             connection.setAutoCommit(false);
+
+            // Fetch the customer ID
+            try (PreparedStatement pstmt = connection.prepareStatement(selectCustomerIdSql)) {
+                pstmt.setString(1, customerName);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        customerId = rs.getInt(1);
+                    } else {
+                        throw new SQLException("No customer found with the name: " + customerName);
+                    }
+                }
+            }
 
             // Insert project details into Project table
             try (PreparedStatement pstmt = connection.prepareStatement(insertProjectSql, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,7 +45,7 @@ public class ProjectManager_DB {
                 pstmt.setString(2, projectDescription);
                 pstmt.setDate(3, java.sql.Date.valueOf(startDate));
                 pstmt.setDate(4, java.sql.Date.valueOf(endDate));
-                pstmt.setString(5, customerName);
+                pstmt.setInt(5, customerId);
 
                 pstmt.executeUpdate();
 
@@ -57,10 +73,25 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while trying to save PDF to the database.", e);
         }
     }
+    public void saveDocToDataBase(Documentation documentation){
+        String sql = "INSERT INTO Documentation (startDate, endDate, pdfFile, projectId) VALUES (?, ?, ?, ?)";
+        try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, documentation.getStartDate());
+            statement.setDate(2, documentation.getEndDate());
+            statement.setString(3, documentation.getPdfData());
+            statement.setInt(4, documentation.getProjectId());
+
+            statement.executeUpdate();
+
+    } catch (SQLServerException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
-
-    public void deletePDF(Project project) {
+        public void deletePDF(Project project) {
         String sql = "DELETE FROM Projects WHERE id = ?";
 
         try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(sql)) {

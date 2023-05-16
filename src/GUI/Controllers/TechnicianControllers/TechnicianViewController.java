@@ -1,5 +1,6 @@
 package GUI.Controllers.TechnicianControllers;
 
+import BE.Documentation;
 import BE.Employee;
 import DAL.ProjectManager_DB;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -14,7 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -116,7 +117,7 @@ public class TechnicianViewController {
     }
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
-        String projectName = projectNameTXT.getText();
+
         String projectDescription = projectDisTXT.getText();
         LocalDate startDate = startDateTXT.getValue();
         LocalDate endDate = endDateTXT.getValue();
@@ -125,14 +126,28 @@ public class TechnicianViewController {
         // Generate the PDF
         try {
             byte[] pdfData = generatePdf(projectDescription, startDate, endDate, customerName);
-
+            Documentation documentation = new Documentation(startDate, endDate, pdfFile, 1);
             // Save the generated PDF to the database
-            projectManagerDb.savePdfToDatabase(projectName, projectDescription, startDate, endDate, customerName, pdfData);
+            projectManagerDb.saveDocToDataBase( );
+
+            // Display a success message
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Project details and PDF saved successfully!");
 
         } catch (IOException e) {
             e.printStackTrace();
+            // Display an error message
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details and PDF.");
         }
     }
+
+    // Add this helper method to display alerts
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
 
 
