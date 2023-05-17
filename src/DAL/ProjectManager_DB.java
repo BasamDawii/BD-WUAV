@@ -6,6 +6,7 @@ import BE.ProjectDetails;
 import DAL.database.DBConnector;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -106,28 +107,36 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while trying to delete project.", e);
         }
     }
-    public ArrayList<ProjectDetails> getData(){
-        ArrayList<ProjectDetails> arrayList = new ArrayList<>();
-        String query = "SELECT p.projectName, p.projectDescription, p.startDate, p.endDate, c.name " +
+    public ArrayList<ProjectDetails> getData() throws SQLServerException, IOException {
+        ArrayList<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+        String query = "SELECT p.id, p.projectName, c.name AS customer_name, d.startDate, d.endDate " +
                 "FROM Project p " +
-                "INNER JOIN Customer c ON p.customerId = c.id";
-        try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(query);
+                "INNER JOIN Customer c ON p.customerId = c.id " +
+                "INNER JOIN Documentation d ON p.id = d.projectId";
+
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement pstmt = connection.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
             while (rs.next()) {
                 String projectName = rs.getString("projectName");
-                String projectDesc = rs.getString("projectDescription");
-                Date startDate = rs.getDate("startDate");
-                Date endDate = rs.getDate("endDate");
-                String customerName = rs.getString("name");
+                String projectDesc = ""; // adjust this if you have a description column
+                LocalDate startDate = rs.getDate("startDate").toLocalDate();
+                LocalDate endDate = rs.getDate("endDate").toLocalDate();
+                String customerName = rs.getString("customer_name");
+
                 ProjectDetails projectDetails = new ProjectDetails(projectName, projectDesc, startDate, endDate, customerName);
-                arrayList.add(projectDetails);
+                projectDetailsList.add(projectDetails);
             }
-            return arrayList;
         } catch (SQLException e) {
             // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while retrieving Data.", e);
+            throw new RuntimeException("Error while trying to load project data.", e);
         }
+
+        return projectDetailsList;
     }
+
     public ArrayList<Integer> getTechniciansId(){
         ArrayList<Integer> arrayList = new ArrayList<>();
         String query = "SELECT id From Employee where employeeType = 'Technician'";

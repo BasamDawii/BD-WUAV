@@ -1,15 +1,17 @@
 package BE;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class ProjectDetails {
     private String projectName;
     private String projectDesc;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
     private String customer_name;
 
-    public ProjectDetails(String projectName, String projectDesc, Date startDate, Date endDate, String customer_name) {
+    public ProjectDetails(String projectName, String projectDesc, LocalDate startDate, LocalDate endDate, String customer_name) {
         this.projectName = projectName;
         this.projectDesc = projectDesc;
         this.startDate = startDate;
@@ -33,19 +35,19 @@ public class ProjectDetails {
         this.projectDesc = projectDesc;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -56,5 +58,4 @@ public class ProjectDetails {
     public void setCustomer_name(String customer_name) {
         this.customer_name = customer_name;
     }
-
 }
