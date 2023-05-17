@@ -3,6 +3,7 @@ package GUI.Controllers.TechnicianControllers;
 import BE.Documentation;
 import BE.Employee;
 import DAL.ProjectManager_DB;
+import GUI.Models.TechnicianModel;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -12,6 +13,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,19 +40,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-public class TechnicianViewController {
-    private ProjectManager_DB projectManagerDb;
+import java.util.ResourceBundle;
 
-    public TextField projectNameTXT;
-    public TextField projectDisTXT;
-    public DatePicker startDateTXT;
-    public DatePicker endDateTXT;
-    public TextField customerNameTXT;
+public class TechnicianViewController implements Initializable{
+    @FXML
+    private ChoiceBox selectProject;
+    private ProjectManager_DB projectManagerDb;
+    @FXML
+    private TextField projectDisTXT, customerNameTXT, projectNameTXT, newProjectTXT;
+    @FXML
+    private DatePicker startDateTXT, endDateTXT;
     @FXML
     private Pane savedImageArea;
     @FXML
@@ -61,6 +67,9 @@ public class TechnicianViewController {
     @FXML
     private Label usernameLabel;
     private Employee loggedInEmployee;
+    private TechnicianModel technicianModel;
+
+
 
     public void uploadButton(ActionEvent event) {
         try {
@@ -151,9 +160,6 @@ public class TechnicianViewController {
         alert.showAndWait();
     }
 
-
-
-
     private Color javaFXColorToAWTColor(javafx.scene.paint.Color fxColor) {
         return new Color((float) fxColor.getRed(), (float) fxColor.getGreen(), (float) fxColor.getBlue(), (float) fxColor.getOpacity());
     }
@@ -227,4 +233,29 @@ public class TechnicianViewController {
         }
     }
 
+    public void newProjectButton(ActionEvent event) {
+        String projectName = projectNameTXT.getText();
+
+        try {
+            technicianModel.createNewProject(projectName);
+
+            projectNameTXT.clear();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created an event coordinator ..!");
+            alert.show();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        projectManagerDb = new ProjectManager_DB();
+        try {
+
+            technicianModel = new TechnicianModel();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

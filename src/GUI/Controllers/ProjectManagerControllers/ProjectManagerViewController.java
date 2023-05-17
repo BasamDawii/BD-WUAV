@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,10 +18,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.ResourceBundle;
 
-public class ProjectManagerViewController {
+public class ProjectManagerViewController implements Initializable {
     private Employee loggedInEmployee;
     @FXML
     private Label usernameLabel;
@@ -43,13 +46,24 @@ public class ProjectManagerViewController {
     @FXML
     private TableColumn <ProjectDetails, String> customerName;
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            viewAllProject();
+            addTechnician();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLServerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public void handleLogoutButton(ActionEvent event) throws IOException, SQLServerException {
         navigateToView("/GUI/Views/LoginView.fxml", event);
     }
-    public void viewAllProject(ActionEvent event) throws IOException, SQLServerException {
-        splitPane.setVisible(false);
-        tableView.setVisible(true);
-
+    public void viewAllProject() throws IOException, SQLServerException {
         ArrayList<ProjectDetails> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
         projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
@@ -66,9 +80,7 @@ public class ProjectManagerViewController {
         }
         tableView.setItems(observableList);
     }
-    public void addTechnician(ActionEvent event) throws IOException, SQLServerException {
-        tableView.setVisible(false);
-        splitPane.setVisible(true);
+    public void addTechnician() throws IOException, SQLServerException {
         ArrayList<Integer> projectId = new ProjectManagerModel().loadProjectId();
         ArrayList<Integer> technicianId = new ProjectManagerModel().loadTechnicianId();
 
@@ -117,4 +129,6 @@ public class ProjectManagerViewController {
         usernameLabel.setText(employee.getUsername());
         usernameLabel.setTranslateX(60);
     }
+
+
 }

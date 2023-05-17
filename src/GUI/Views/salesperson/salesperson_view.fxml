@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.SalespersonControllers.SalespersonViewController">
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.SalespersonControllers.SalespersonViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -28,17 +34,9 @@
                <font>
                   <Font size="16.0" />
                </font></Label>
-            <Button mnemonicParsing="false" onAction="#viewAllProject" prefHeight="48.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="View All Project" textFill="WHITE">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="160.0" />
-               </VBox.margin>
-            </Button>
             <Button mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #191919;" text="Sign Out" textFill="WHITE">
                <VBox.margin>
-                  <Insets />
+                  <Insets top="200.0" />
                </VBox.margin>
                <font>
                   <Font size="15.0" />
@@ -46,14 +44,23 @@
             </Button>
          </children>
       </VBox>
-      <TableView fx:id="tableView" prefHeight="700.0" prefWidth="901.0" visible="false">
-         <columns>
-            <TableColumn fx:id="projectName" prefWidth="94.33334350585938" text="Project Name" />
-            <TableColumn fx:id="projectDesc" minWidth="0.0" prefWidth="154.6666259765625" text="Project Description" />
-            <TableColumn fx:id="startDate" prefWidth="92.66668701171875" text="Start Date" />
-            <TableColumn fx:id="endDate" prefWidth="151.0" text="End Date" />
-            <TableColumn fx:id="customerName" prefWidth="119.0" text="Customer Name" />
-         </columns>
-      </TableView>
+      <VBox prefHeight="700.0" prefWidth="899.0">
+         <children>
+            <TableView fx:id="tableView" prefHeight="700.0" prefWidth="174.0">
+               <columns>
+                  <TableColumn fx:id="projectName" prefWidth="94.33334350585938" text="Project Name" />
+                  <TableColumn fx:id="projectDesc" minWidth="0.0" prefWidth="154.6666259765625" text="Project Description" />
+                  <TableColumn fx:id="startDate" prefWidth="92.66668701171875" text="Start Date" />
+                  <TableColumn fx:id="endDate" prefWidth="151.0" text="End Date" />
+                  <TableColumn fx:id="customerName" prefWidth="119.0" text="Customer Name" />
+               </columns>
+            </TableView>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" text="Print" />
+              </items>
+            </ToolBar>
+         </children>
+      </VBox>
    </children>
 </HBox>
