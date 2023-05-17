@@ -116,8 +116,8 @@
                   <ChoiceBox fx:id="selectProject" prefHeight="26.0" prefWidth="172.0" />
                 <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="90.0" text="Save Local" />
                  <Button fx:id="saveButton" onAction="#saveButton" text="Upload to DB" />
-                  <Button mnemonicParsing="false" onAction="#newProjectButton" text="New Project" />
-                  <TextField fx:id="newProjectTXT" promptText="New Project Name" />
+                 <Button mnemonicParsing="false" onAction="#newProjectButton" text="New Project" />
+                 <TextField fx:id="projectNameTXT" promptText="New Project Name" />
               </items>
                <VBox.margin>
                   <Insets top="5.0" />

@@ -54,7 +54,8 @@ public class TechnicianViewController implements Initializable{
     private ChoiceBox selectProject;
     private ProjectManager_DB projectManagerDb;
     @FXML
-    private TextField projectDisTXT, customerNameTXT, projectNameTXT, newProjectTXT;
+    private TextField projectDisTXT, customerNameTXT, projectNameTXT;
+
     @FXML
     private DatePicker startDateTXT, endDateTXT;
     @FXML
@@ -233,6 +234,8 @@ public class TechnicianViewController implements Initializable{
         }
     }
 
+
+
     public void newProjectButton(ActionEvent event) {
         String projectName = projectNameTXT.getText();
 
@@ -247,6 +250,7 @@ public class TechnicianViewController implements Initializable{
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
