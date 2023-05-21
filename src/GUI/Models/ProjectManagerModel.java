@@ -14,13 +14,14 @@ public class ProjectManagerModel {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();
         return projectManager_db.getData();
     }
-    public ArrayList<Integer> loadProjectId(){
+    public ArrayList<String> loadProjectNames() {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();
-        return projectManager_db.getProjectId();
+        return projectManager_db.getProjectNames();
     }
-    public ArrayList<Integer> loadTechnicianId(){
+
+    public ArrayList<String> loadTechnicianNames() {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();
-        return projectManager_db.getTechniciansId();
+        return projectManager_db.getTechnicianNames();
     }
     public boolean addEmpProject(int pid, int tid){
         ProjectManager_DB projectManager_db = new ProjectManager_DB();

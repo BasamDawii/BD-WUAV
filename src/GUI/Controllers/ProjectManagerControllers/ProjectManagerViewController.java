@@ -64,10 +64,11 @@ public class ProjectManagerViewController implements Initializable {
         navigateToView("/GUI/Views/LoginView.fxml", event);
     }
     public void viewAllProject() throws IOException, SQLServerException {
+
+
         ArrayList<ProjectDetails> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
         projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
-        projectDesc.setCellValueFactory(new PropertyValueFactory<>("projectDesc"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
@@ -77,21 +78,22 @@ public class ProjectManagerViewController implements Initializable {
         observableList.removeAll();
         for (ProjectDetails project: arrayList) {
             observableList.add(project);
+            System.out.println(project.toString());
         }
         tableView.setItems(observableList);
     }
     public void addTechnician() throws IOException, SQLServerException {
-        ArrayList<Integer> projectId = new ProjectManagerModel().loadProjectId();
-        ArrayList<Integer> technicianId = new ProjectManagerModel().loadTechnicianId();
+        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
+        ArrayList<String> technicianId = new ProjectManagerModel().loadTechnicianNames();
 
         ObservableList<String> list1 = comboBox1.getItems();
         ObservableList<String> list2 = comboBox2.getItems();
         comboBox1.getItems().clear();
         comboBox2.getItems().clear();
-        for (Integer i: projectId) {
+        for (String i: projectId) {
             list1.add(i+"");
         }
-        for (Integer i: technicianId) {
+        for (String i: technicianId) {
             list2.add(i+"");
         }
 

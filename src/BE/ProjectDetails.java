@@ -5,15 +5,15 @@ import java.time.LocalDate;
 
 public class ProjectDetails {
     private String projectName;
-    private String projectDesc;
+
     private LocalDate startDate;
     private LocalDate endDate;
 
     private String customer_name;
 
-    public ProjectDetails(String projectName, String projectDesc, LocalDate startDate, LocalDate endDate, String customer_name) {
+    public ProjectDetails(String projectName, LocalDate startDate, LocalDate endDate, String customer_name) {
         this.projectName = projectName;
-        this.projectDesc = projectDesc;
+
         this.startDate = startDate;
         this.endDate = endDate;
         this.customer_name = customer_name;
@@ -27,13 +27,6 @@ public class ProjectDetails {
         this.projectName = projectName;
     }
 
-    public String getProjectDesc() {
-        return projectDesc;
-    }
-
-    public void setProjectDesc(String projectDesc) {
-        this.projectDesc = projectDesc;
-    }
 
     public LocalDate getStartDate() {
         return startDate;

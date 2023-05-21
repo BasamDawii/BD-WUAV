@@ -4,6 +4,7 @@ import BE.Employee;
 import BE.ProjectDetails;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -37,11 +39,9 @@ public class SalespersonViewController implements Initializable {
     @FXML
     private TableColumn<ProjectDetails, String> projectName;
     @FXML
-    private TableColumn <ProjectDetails, String> projectDesc;
+    private TableColumn <ProjectDetails, LocalDate> startDate;
     @FXML
-    private TableColumn <ProjectDetails, Date> startDate;
-    @FXML
-    private TableColumn <ProjectDetails, Date> endDate;
+    private TableColumn <ProjectDetails, LocalDate> endDate;
     @FXML
     private TableColumn <ProjectDetails, String> customerName;
 
@@ -70,10 +70,10 @@ public class SalespersonViewController implements Initializable {
     }
     public void viewAllProject() throws IOException, SQLServerException {
 
+
         ArrayList<ProjectDetails> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
         projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
-        projectDesc.setCellValueFactory(new PropertyValueFactory<>("projectDesc"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
@@ -83,6 +83,7 @@ public class SalespersonViewController implements Initializable {
         observableList.removeAll();
         for (ProjectDetails project: arrayList) {
             observableList.add(project);
+            System.out.println(project.toString());
         }
         tableView.setItems(observableList);
     }

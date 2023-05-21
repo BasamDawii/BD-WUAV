@@ -50,11 +50,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class TechnicianViewController implements Initializable{
+
     @FXML
     private ChoiceBox selectProject;
     private ProjectManager_DB projectManagerDb;
     @FXML
-    private TextField projectDisTXT, customerNameTXT, projectNameTXT;
+    private TextField docNameTXT, customerNameTXT, projectNameTXT;
 
     @FXML
     private DatePicker startDateTXT, endDateTXT;
@@ -131,15 +132,15 @@ public class TechnicianViewController implements Initializable{
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
 
-        String projectDescription = projectDisTXT.getText();
+        String docName = docNameTXT.getText();
         LocalDate startDate = startDateTXT.getValue();
         LocalDate endDate = endDateTXT.getValue();
         String customerName = customerNameTXT.getText();
 
         // Generate the PDF
         try {
-            byte[] pdfData = generatePdf(projectDescription, startDate, endDate, customerName);
-            Documentation documentation = new Documentation(0,startDate, endDate,  1,new String(pdfData, StandardCharsets.UTF_8));
+            byte[] pdfData = generatePdf(docName, startDate, endDate, customerName);
+            Documentation documentation = new Documentation(0, docName,startDate, endDate,  customerName,1,new String(pdfData, StandardCharsets.UTF_8));
             // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase( documentation);
 
@@ -194,9 +195,7 @@ public class TechnicianViewController implements Initializable{
             contentStream.setFont(PDType1Font.HELVETICA, 12);
             contentStream.beginText();
             contentStream.newLineAtOffset(50, 400); // Adjust the position as needed
-            contentStream.showText("Project Name: " + projectNameTXT.getText());
-            contentStream.newLineAtOffset(0, -14); // Adjust the line spacing as needed
-            contentStream.showText("Project Description: " + projectDisTXT.getText());
+            contentStream.showText("Project Description: " + docNameTXT.getText());
             contentStream.newLineAtOffset(0, -14);
             contentStream.showText("Start Date: " + startDateTXT.getValue());
             contentStream.newLineAtOffset(0, -14);

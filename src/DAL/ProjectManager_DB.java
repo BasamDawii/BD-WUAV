@@ -21,12 +21,14 @@ public class ProjectManager_DB {
 
 
     public void saveDocToDataBase(Documentation documentation){
-        String sql = "INSERT INTO Documentation (startDate, endDate, pdfFile, projectId) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Documentation (docName, startDate, endDate, customerName, pdfFile, projectId) VALUES (?, ?, ?, ?,?,?)";
         try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setDate(1, Date.valueOf(documentation.getStartDate()));
-            statement.setDate(2, Date.valueOf(documentation.getEndDate()));
-            statement.setString(3, documentation.getPdfData());
-            statement.setInt(4, documentation.getProjectId());
+            statement.setString(1, documentation.getDocName());
+            statement.setDate(2, Date.valueOf(documentation.getStartDate()));
+            statement.setDate(3, Date.valueOf(documentation.getEndDate()));
+            statement.setString(4, documentation.getCostumerName());
+            statement.setString(5, documentation.getPdfData());
+            statement.setInt(6, documentation.getProjectId());
 
             statement.executeUpdate();
 
@@ -56,23 +58,19 @@ public class ProjectManager_DB {
     public ArrayList<ProjectDetails> getData() throws SQLServerException, IOException {
         ArrayList<ProjectDetails> projectDetailsList = new ArrayList<>();
 
-        String query = "SELECT p.id, p.projectName, c.name AS customer_name, d.startDate, d.endDate " +
-                "FROM Project p " +
-                "INNER JOIN Customer c ON p.customerId = c.id " +
-                "INNER JOIN Documentation d ON p.id = d.projectId";
+        String query = "SELECT * FROM Documentation";
 
         try (Connection connection = dbConnector.getConnected();
              PreparedStatement pstmt = connection.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String projectName = rs.getString("projectName");
-                String projectDesc = ""; // adjust this if you have a description column
+                String projectName = rs.getString("docName");
                 LocalDate startDate = rs.getDate("startDate").toLocalDate();
                 LocalDate endDate = rs.getDate("endDate").toLocalDate();
-                String customerName = rs.getString("customer_name");
-
-                ProjectDetails projectDetails = new ProjectDetails(projectName, projectDesc, startDate, endDate, customerName);
+                String customerName = rs.getString("customerName");
+                System.out.println(projectName);
+                ProjectDetails projectDetails = new ProjectDetails(projectName, startDate, endDate, customerName);
                 projectDetailsList.add(projectDetails);
             }
         } catch (SQLException e) {
@@ -83,34 +81,33 @@ public class ProjectManager_DB {
         return projectDetailsList;
     }
 
-    public ArrayList<Integer> getTechniciansId(){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        String query = "SELECT id From Employee where employeeType = 'Technician'";
+
+    public ArrayList<String> getTechnicianNames() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String query = "SELECT username FROM Employee WHERE employeeType = 'Technician'";
         try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                int id = rs.getInt("id");
-                arrayList.add(id);
+                String username = rs.getString("username");
+                arrayList.add(username);
             }
             return arrayList;
         } catch (SQLException e) {
-            // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while retrieving Data.", e);
+            throw new RuntimeException("Error while retrieving data.", e);
         }
     }
-    public ArrayList<Integer> getProjectId(){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        String query = "SELECT id From Project";
+    public ArrayList<String> getProjectNames() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String query = "SELECT projectName FROM Project";
         try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                int id = rs.getInt("id");
-                arrayList.add(id);
+                String projectName = rs.getString("projectName");
+                arrayList.add(projectName);
             }
             return arrayList;
         } catch (SQLException e) {
-            // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while retrieving Data.", e);
+            throw new RuntimeException("Error while retrieving data.", e);
         }
     }
 
