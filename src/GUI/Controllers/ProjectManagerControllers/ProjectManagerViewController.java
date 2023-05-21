@@ -81,21 +81,17 @@ public class ProjectManagerViewController implements Initializable {
         tableView.setItems(observableList);
     }
     public void addTechnician() throws IOException, SQLServerException {
-        ArrayList<Integer> projectId = new ProjectManagerModel().loadProjectId();
-        ArrayList<Integer> technicianId = new ProjectManagerModel().loadTechnicianId();
+        ArrayList<String> projectNames = new ProjectManagerModel().loadProjectNames();
+        ArrayList<String> technicianNames = new ProjectManagerModel().loadTechnicianNames();
 
         ObservableList<String> list1 = comboBox1.getItems();
         ObservableList<String> list2 = comboBox2.getItems();
         comboBox1.getItems().clear();
         comboBox2.getItems().clear();
-        for (Integer i: projectId) {
-            list1.add(i+"");
-        }
-        for (Integer i: technicianId) {
-            list2.add(i+"");
-        }
-
+        list1.addAll(projectNames);
+        list2.addAll(technicianNames);
     }
+
     public void confirmTechnician(ActionEvent event) throws IOException, SQLServerException {
         int projectId = Integer.parseInt(comboBox1.getValue());
         int technicianId = Integer.parseInt(comboBox2.getValue());

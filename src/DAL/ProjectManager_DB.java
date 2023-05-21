@@ -83,36 +83,37 @@ public class ProjectManager_DB {
         return projectDetailsList;
     }
 
-    public ArrayList<Integer> getTechniciansId(){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        String query = "SELECT id From Employee where employeeType = 'Technician'";
+    public ArrayList<String> getTechnicianNames() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String query = "SELECT username FROM Employee WHERE employeeType = 'Technician'";
         try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                int id = rs.getInt("id");
-                arrayList.add(id);
+                String username = rs.getString("username");
+                arrayList.add(username);
             }
             return arrayList;
         } catch (SQLException e) {
-            // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while retrieving Data.", e);
+            throw new RuntimeException("Error while retrieving data.", e);
         }
     }
-    public ArrayList<Integer> getProjectId(){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        String query = "SELECT id From Project";
+
+
+    public ArrayList<String> getProjectNames() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String query = "SELECT projectName FROM Project";
         try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                int id = rs.getInt("id");
-                arrayList.add(id);
+                String projectName = rs.getString("projectName");
+                arrayList.add(projectName);
             }
             return arrayList;
         } catch (SQLException e) {
-            // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while retrieving Data.", e);
+            throw new RuntimeException("Error while retrieving data.", e);
         }
     }
+
 
 
     public boolean addTechnicianToProject(int pid, int tid){

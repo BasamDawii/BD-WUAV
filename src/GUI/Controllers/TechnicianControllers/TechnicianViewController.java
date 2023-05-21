@@ -243,7 +243,7 @@ public class TechnicianViewController implements Initializable{
             technicianModel.createNewProject(projectName);
 
             projectNameTXT.clear();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created an event coordinator ..!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
             alert.show();
 
         } catch (Exception e) {
@@ -255,6 +255,7 @@ public class TechnicianViewController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         projectManagerDb = new ProjectManager_DB();
+
         try {
 
             technicianModel = new TechnicianModel();
