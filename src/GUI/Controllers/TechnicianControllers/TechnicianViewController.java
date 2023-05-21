@@ -3,12 +3,14 @@ package GUI.Controllers.TechnicianControllers;
 import BE.Documentation;
 import BE.Employee;
 import DAL.ProjectManager_DB;
+import GUI.Models.ProjectManagerModel;
 import GUI.Models.TechnicianModel;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,13 +48,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class TechnicianViewController implements Initializable{
 
+
     @FXML
-    private ChoiceBox selectProject;
+    private  ComboBox comboBoxSelectProject;
     private ProjectManager_DB projectManagerDb;
     @FXML
     private TextField docNameTXT, customerNameTXT, projectNameTXT;
@@ -71,8 +75,29 @@ public class TechnicianViewController implements Initializable{
     private Employee loggedInEmployee;
     private TechnicianModel technicianModel;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
+        try {
+            projectManagerDb = new ProjectManager_DB();
+            technicianModel = new TechnicianModel();
+            selectedProject();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void selectedProject()throws IOException, SQLServerException{
+        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
 
+        ObservableList<String> list1 = comboBoxSelectProject.getItems();
+        comboBoxSelectProject.getItems().clear();
+
+        for (String i: projectId) {
+            list1.add(i+"");
+        }
+    }
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -250,15 +275,4 @@ public class TechnicianViewController implements Initializable{
         }
     }
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        projectManagerDb = new ProjectManager_DB();
-        try {
-
-            technicianModel = new TechnicianModel();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

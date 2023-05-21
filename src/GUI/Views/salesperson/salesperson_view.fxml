@@ -46,17 +46,17 @@
       </VBox>
       <VBox prefHeight="700.0" prefWidth="899.0">
          <children>
-            <TableView fx:id="tableView" prefHeight="700.0" prefWidth="174.0">
+            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="700.0" prefWidth="174.0">
                <columns>
-                  <TableColumn fx:id="projectName" prefWidth="157.0" text="DocName" />
-                  <TableColumn fx:id="startDate" prefWidth="165.0" text="Start Date" />
-                  <TableColumn fx:id="endDate" prefWidth="172.0" text="End Date" />
-                  <TableColumn fx:id="customerName" minWidth="8.0" prefWidth="181.0" text="Customer Name" />
+                  <TableColumn fx:id="projectName" prefWidth="222.0" text="Project Name" />
+                  <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="237.0" text="Start Date" />
+                  <TableColumn fx:id="endDate" minWidth="0.0" prefWidth="219.0" text="End Date" />
+                  <TableColumn fx:id="customerName" prefWidth="220.0" text="Customer Name" />
                </columns>
             </TableView>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button mnemonicParsing="false" text="Print" />
+                <Button fx:id="saveLocalButtonn" mnemonicParsing="false" onAction="#saveLocalButton" text="Print" />
               </items>
             </ToolBar>
          </children>

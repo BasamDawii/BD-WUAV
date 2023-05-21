@@ -2,7 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -46,7 +46,7 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Button" textFill="WHITE">
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="Edit Documentation" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font></Button>
@@ -98,11 +98,11 @@
                   <TextField fx:id="docNameTXT" prefHeight="26.0" prefWidth="140.0" promptText="Doc Name" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" />
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="84.13671875" />
                   <DatePicker fx:id="startDateTXT" prefHeight="26.0" prefWidth="150.0" promptText="Start Date" />
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="79.13671875" />
                   <DatePicker fx:id="endDateTXT" prefHeight="26.0" prefWidth="150.0" promptText="End Date" />
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="74.13671875" />
                   <TextField fx:id="customerNameTXT" promptText="Customer Name" />
                </items>
                <VBox.margin>
@@ -111,11 +111,13 @@
             </ToolBar>
             <ToolBar prefHeight="30.0" prefWidth="942.0" style="-fx-background-color: #ffffff;">
               <items>
-                  <ChoiceBox fx:id="selectProject" prefHeight="26.0" prefWidth="172.0" />
-                <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="90.0" text="Save Local" />
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <ComboBox fx:id="comboBoxSelectProject" prefHeight="25.0" prefWidth="143.0" />
+                <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="96.0" text="Save Local" />
                  <Button fx:id="saveButton" onAction="#saveButton" text="Upload to DB" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="-----------" wrappingWidth="56.13671875" />
                  <Button mnemonicParsing="false" onAction="#newProjectButton" text="New Project" />
-                 <TextField fx:id="projectNameTXT" promptText="New Project Name" />
+                 <TextField fx:id="projectNameTXT" prefHeight="25.0" prefWidth="149.0" promptText="New Project Name" />
               </items>
                <VBox.margin>
                   <Insets top="5.0" />

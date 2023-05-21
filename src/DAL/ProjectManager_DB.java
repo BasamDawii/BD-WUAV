@@ -5,19 +5,23 @@ import BE.Project;
 import BE.ProjectDetails;
 import DAL.database.DBConnector;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import javafx.fxml.Initializable;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 
-public class ProjectManager_DB {
+public class ProjectManager_DB{
     private DBConnector dbConnector;
 
     public ProjectManager_DB() {
         dbConnector = new DBConnector();
     }
+
 
 
     public void saveDocToDataBase(Documentation documentation){
@@ -55,6 +59,32 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while trying to delete project.", e);
         }
     }
+
+    public Documentation getDocumentById(int documentId) {
+        String sql = "SELECT * FROM Documentation WHERE id = ?";
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, documentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String documentationName = resultSet.getString("docName");
+                    LocalDate startDate = resultSet.getDate("startDate").toLocalDate();
+                    LocalDate endDate = resultSet.getDate("endDate").toLocalDate();
+                    String customerName = resultSet.getString("customerName");
+                    int projectId = resultSet.getInt("projectId");
+                    String pdfData = resultSet.getString("pdfFile");
+
+                    return new Documentation(id, documentationName, startDate, endDate, customerName,projectId, pdfData);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as per your application's requirements
+        }
+        return null; // Document not found with the given ID
+    }
+
     public ArrayList<ProjectDetails> getData() throws SQLServerException, IOException {
         ArrayList<ProjectDetails> projectDetailsList = new ArrayList<>();
 
@@ -127,4 +157,6 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while Inserting Data.", e);
         }
     }
+
+
 }

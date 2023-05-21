@@ -129,8 +129,6 @@ public class ProjectManagerViewController implements Initializable {
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
         usernameLabel.setText(employee.getUsername());
-        usernameLabel.setTranslateX(60);
+        usernameLabel.setTranslateX(90);
     }
-
-
 }
