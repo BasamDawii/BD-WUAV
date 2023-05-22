@@ -112,7 +112,7 @@
             <ToolBar prefHeight="30.0" prefWidth="942.0" style="-fx-background-color: #ffffff;">
               <items>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <ComboBox fx:id="comboBoxSelectProject" prefHeight="25.0" prefWidth="143.0" />
+                  <ComboBox fx:id="comboBoxSelectProject" prefHeight="25.0" prefWidth="143.0" promptText="Select a project" />
                 <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="96.0" text="Save Local" />
                  <Button fx:id="saveButton" onAction="#saveButton" text="Upload to DB" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="-----------" wrappingWidth="56.13671875" />

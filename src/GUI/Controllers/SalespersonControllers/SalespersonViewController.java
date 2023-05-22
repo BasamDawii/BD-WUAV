@@ -130,7 +130,8 @@ public class SalespersonViewController implements Initializable {
             // Perform the necessary steps to save the PDF to the chosen file path
             try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                 // Retrieve the PDF data from the selected document
-                byte[] pdfData = selectedDocument.getPdfData().getBytes(StandardCharsets.UTF_8);
+                String pdfDataString = selectedDocument.getPdfData();
+                byte[] pdfData = pdfDataString.getBytes(StandardCharsets.UTF_8);
                 fileOutputStream.write(pdfData);
                 fileOutputStream.flush();
 
@@ -143,6 +144,8 @@ public class SalespersonViewController implements Initializable {
             }
         }
     }
+
+
 
 
 
