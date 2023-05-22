@@ -15,6 +15,7 @@
     <orderEntry type="library" name="apache.pdfbox" level="project" />
     <orderEntry type="library" name="itextpdf.kernel" level="project" />
     <orderEntry type="library" name="itextpdf.layout" level="project" />
+    <orderEntry type="library" name="apache.directory.studio.commons.io" level="project" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_FOLDERS">

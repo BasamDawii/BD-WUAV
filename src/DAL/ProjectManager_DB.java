@@ -55,6 +55,29 @@ public class ProjectManager_DB {
             throw new RuntimeException("Error while trying to delete project.", e);
         }
     }
+    public Documentation getDocumentation(int projectId) throws SQLException {
+        String query = "SELECT pdf_file FROM Documentation WHERE projectId = ?";
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, projectId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                byte[] pdfData = resultSet.getBytes("pdf_file");
+                Documentation documentation = new Documentation(projectId, pdfData);
+                return documentation;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while trying to retrieve documentation.", e);
+        }
+
+        return null; // No documentation found for the given projectId
+    }
+
+
+
+
+
     public ArrayList<ProjectDetails> getData() throws SQLServerException, IOException {
         ArrayList<ProjectDetails> projectDetailsList = new ArrayList<>();
 

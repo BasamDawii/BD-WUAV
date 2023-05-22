@@ -56,7 +56,7 @@
             </TableView>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button mnemonicParsing="false" text="Print" />
+                 <Button mnemonicParsing="false" text="Print" onAction="#handlePrintButton" />
               </items>
             </ToolBar>
          </children>

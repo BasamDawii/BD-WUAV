@@ -1,7 +1,10 @@
 package GUI.Controllers.SalespersonControllers;
 
+import BE.Documentation;
 import BE.Employee;
+import BE.Project;
 import BE.ProjectDetails;
+import DAL.ProjectManager_DB;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,14 +17,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
+import java.awt.Desktop;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 public class SalespersonViewController implements Initializable {
@@ -45,16 +57,73 @@ public class SalespersonViewController implements Initializable {
     @FXML
     private TableColumn <ProjectDetails, String> customerName;
 
+    private ProjectManagerModel projectManagerModel;
+
+    @FXML
+    private Button printButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             viewAllProject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLServerException e) {
+        } catch (IOException | SQLServerException e) {
             throw new RuntimeException(e);
         }
     }
+
+    @FXML
+    private void handlePrintButton() {
+        // Get the selected project from the table view
+        ProjectDetails selectedProject = tableView.getSelectionModel().getSelectedItem();
+
+        if (selectedProject != null) {
+            // Retrieve the document from the database using the selected project's ID
+            ProjectManager_DB projectManagerDB = new ProjectManager_DB();
+            int projectId = selectedProject.getProjectId();
+            try {
+                Documentation documentation = projectManagerDB.getDocumentation(projectId);
+                if (documentation != null) {
+                    byte[] pdfData = documentation.getPdfData();
+
+                    // Save the document as a temporary file
+                    File tempFile = File.createTempFile("document", ".pdf");
+                    try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+                        // Write the document data to the file
+                        outputStream.write(pdfData);
+                    } catch (IOException e) {
+                        // Handle the exception appropriately
+                        e.printStackTrace();
+                        // You may show an error message here if needed
+                        return;
+                    }
+
+                    // Open the file for printing
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.PRINT)) {
+                        desktop.print(tempFile);
+                    } else {
+                        // Printing is not supported on the current platform
+                        // You may show an error message here if needed
+                    }
+
+                    // Delete the temporary file
+                    tempFile.delete();
+                } else {
+                    // No documentation found for the specified project
+                    // You may show an error message here if needed
+                }
+            } catch (SQLException | IOException e) {
+                // Handle the exception appropriately
+                e.printStackTrace();
+                // You may show an error message here if needed
+            }
+        } else {
+            // No project is selected, you may show an error message here if needed
+        }
+    }
+
+
+
 
     public void handleLogoutButton(ActionEvent event) throws IOException, SQLServerException {
         navigateToView("/GUI/Views/LoginView.fxml", event);

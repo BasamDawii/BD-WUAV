@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public class ProjectDetails {
     private String projectName;
+    private int projectId;
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -13,7 +14,7 @@ public class ProjectDetails {
 
     public ProjectDetails(String projectName, LocalDate startDate, LocalDate endDate, String customer_name) {
         this.projectName = projectName;
-
+        this.projectId = projectId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.customer_name = customer_name;
@@ -22,7 +23,12 @@ public class ProjectDetails {
     public String getProjectName() {
         return projectName;
     }
-
+    public int getProjectId() {
+        return projectId;
+    }
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
