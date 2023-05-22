@@ -2,17 +2,13 @@ package DAL;
 
 import BE.Documentation;
 import BE.Project;
-import BE.ProjectDetails;
 import DAL.database.DBConnector;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import javafx.fxml.Initializable;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 
 public class ProjectManager_DB{
@@ -30,7 +26,7 @@ public class ProjectManager_DB{
             statement.setString(1, documentation.getDocName());
             statement.setDate(2, Date.valueOf(documentation.getStartDate()));
             statement.setDate(3, Date.valueOf(documentation.getEndDate()));
-            statement.setString(4, documentation.getCostumerName());
+            statement.setString(4, documentation.getCustomerName());
             statement.setString(5, documentation.getPdfData());
             statement.setInt(6, documentation.getProjectId());
 
@@ -72,10 +68,10 @@ public class ProjectManager_DB{
                     LocalDate startDate = resultSet.getDate("startDate").toLocalDate();
                     LocalDate endDate = resultSet.getDate("endDate").toLocalDate();
                     String customerName = resultSet.getString("customerName");
-                    int projectId = resultSet.getInt("projectId");
                     String pdfData = resultSet.getString("pdfFile");
+                    int projectId = resultSet.getInt("projectId");
 
-                    return new Documentation(id, documentationName, startDate, endDate, customerName,projectId, pdfData);
+                    return new Documentation(id, documentationName, startDate, endDate, customerName, pdfData, projectId);
                 }
             }
         } catch (SQLException e) {
@@ -85,8 +81,8 @@ public class ProjectManager_DB{
         return null; // Document not found with the given ID
     }
 
-    public ArrayList<ProjectDetails> getData() throws SQLServerException, IOException {
-        ArrayList<ProjectDetails> projectDetailsList = new ArrayList<>();
+    public ArrayList<Documentation> getData() throws SQLServerException, IOException {
+        ArrayList<Documentation> documentations = new ArrayList<>();
 
         String query = "SELECT * FROM Documentation";
 
@@ -95,20 +91,24 @@ public class ProjectManager_DB{
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String projectName = rs.getString("docName");
+                int id = rs.getInt("id");
+                String docName = rs.getString("docName");
                 LocalDate startDate = rs.getDate("startDate").toLocalDate();
                 LocalDate endDate = rs.getDate("endDate").toLocalDate();
                 String customerName = rs.getString("customerName");
-                System.out.println(projectName);
-                ProjectDetails projectDetails = new ProjectDetails(projectName, startDate, endDate, customerName);
-                projectDetailsList.add(projectDetails);
+                String pdfData = rs.getString("pdfFile");
+                int projectId = rs.getInt("projectId");
+
+                System.out.println(docName);
+                Documentation documentation = new Documentation(id, docName, startDate, endDate, customerName, pdfData, projectId);
+                documentations.add(documentation);
             }
         } catch (SQLException e) {
             // Handle the exception appropriately, for example, log it or rethrow it.
             throw new RuntimeException("Error while trying to load project data.", e);
         }
 
-        return projectDetailsList;
+        return documentations;
     }
 
 

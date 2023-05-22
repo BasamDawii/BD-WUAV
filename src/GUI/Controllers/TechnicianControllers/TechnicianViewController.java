@@ -36,6 +36,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +50,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -156,7 +158,6 @@ public class TechnicianViewController implements Initializable{
 
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
-
         String docName = docNameTXT.getText();
         LocalDate startDate = startDateTXT.getValue();
         LocalDate endDate = endDateTXT.getValue();
@@ -164,20 +165,37 @@ public class TechnicianViewController implements Initializable{
 
         // Generate the PDF
         try {
+            // Create a temporary PDF file
+            File tempPdfFile = File.createTempFile("project-", ".pdf");
+
+            // Generate the PDF and save it to the temporary file
             byte[] pdfData = generatePdf(docName, startDate, endDate, customerName);
-            Documentation documentation = new Documentation(0, docName,startDate, endDate,  customerName,1,new String(pdfData, StandardCharsets.UTF_8));
-            // Save the generated PDF to the database
-            projectManagerDb.saveDocToDataBase( documentation);
+            Files.write(tempPdfFile.toPath(), pdfData);
+
+            // Save the selected image
+            Image image = uploadedImageView.getImage();
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+            String imagePath = tempPdfFile.getParent() + File.separator + "image.jpg";
+            ImageIO.write(bufferedImage, "jpg", new File(imagePath));
+
+            // Encode the PDF data and image path to Base64
+            String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
+            String encodedImagePath = Base64.getEncoder().encodeToString(imagePath.getBytes(StandardCharsets.UTF_8));
+
+            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
+            // Save the generated PDF and image path to the database
+            projectManagerDb.saveDocToDataBase(documentation);
 
             // Display a success message
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Project details and PDF saved successfully!");
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Project details, PDF, and image saved successfully!");
 
         } catch (IOException e) {
             e.printStackTrace();
             // Display an error message
-            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details and PDF.");
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details, PDF, and image.");
         }
     }
+
 
     // Add this helper method to display alerts
     private void showAlert(Alert.AlertType alertType, String title, String message) {

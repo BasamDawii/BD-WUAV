@@ -2,11 +2,9 @@ package GUI.Controllers.SalespersonControllers;
 
 import BE.Documentation;
 import BE.Employee;
-import BE.ProjectDetails;
 import DAL.ProjectManager_DB;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,13 +23,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class SalespersonViewController implements Initializable {
@@ -41,21 +35,10 @@ public class SalespersonViewController implements Initializable {
     @FXML
     private Label usernameLabel;
     @FXML
-    private TableView<ProjectDetails> tableView;
+    private TableView<Documentation> tableView;
     @FXML
-    private SplitPane splitPane;
-    @FXML
-    private ComboBox<String> comboBox1;
-    @FXML
-    private ComboBox<String> comboBox2;
-    @FXML
-    private TableColumn<ProjectDetails, String> projectName;
-    @FXML
-    private TableColumn <ProjectDetails, LocalDate> startDate;
-    @FXML
-    private TableColumn <ProjectDetails, LocalDate> endDate;
-    @FXML
-    private TableColumn <ProjectDetails, String> customerName;
+    private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, dpfDate, projectId;
+
     private ProjectManager_DB projectManagerDb;
     @FXML
     private TextField documentIdTextField;
@@ -85,17 +68,21 @@ public class SalespersonViewController implements Initializable {
     }
     public void viewAllProject() throws IOException, SQLServerException {
 
-        ArrayList<ProjectDetails> arrayList = new ArrayList<>();
+        ArrayList<Documentation> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
-        projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        customerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
+        customerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        projectId.setCellValueFactory(new PropertyValueFactory<>("projectId"));
 
-        ObservableList<ProjectDetails> observableList = tableView.getItems();
+
+
+        ObservableList<Documentation> observableList = tableView.getItems();
         tableView.getItems().clear();
         observableList.removeAll();
-        for (ProjectDetails project: arrayList) {
+        for (Documentation project: arrayList) {
             observableList.add(project);
             System.out.println(project.toString());
         }
@@ -108,9 +95,10 @@ public class SalespersonViewController implements Initializable {
         usernameLabel.setTranslateX(100);
     }
 
+
     public void saveLocalButton(ActionEvent event) {
         // Get the selected item from the table view
-        ProjectDetails selectedDocument = tableView.getSelectionModel().getSelectedItem();
+        Documentation selectedDocument = tableView.getSelectionModel().getSelectedItem();
         if (selectedDocument == null) {
             // No item selected, show an error message
             showAlert(Alert.AlertType.ERROR, "Error", "Please select a document from the table.");
@@ -127,22 +115,35 @@ public class SalespersonViewController implements Initializable {
         File file = fileChooser.showSaveDialog(saveLocalButtonn.getScene().getWindow());
 
         if (file != null) {
-            // Perform the necessary steps to save the PDF to the chosen file path
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                // Retrieve the PDF data from the selected document
-                byte[] pdfData = selectedDocument.getPdfData().getBytes(StandardCharsets.UTF_8);
-                fileOutputStream.write(pdfData);
-                fileOutputStream.flush();
+            try {
+                // Get the PDF data from the selected document
+                String pdfData = selectedDocument.getPdfData();
 
-                // Display a success message
-                showAlert(Alert.AlertType.INFORMATION, "Success", "PDF saved successfully!");
-            } catch (IOException e) {
+                // Decode the Base64 PDF data
+                byte[] decodedData = Base64.getDecoder().decode(pdfData);
+
+                // Save the decoded PDF data to the chosen file path
+                try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                    fileOutputStream.write(decodedData);
+                    fileOutputStream.flush();
+
+                    // Display a success message
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "PDF saved successfully!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Display an error message
+                    showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the PDF.");
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
                 // Display an error message
-                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the PDF.");
+                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while decoding the PDF.");
             }
         }
     }
+
+
+
 
 
 

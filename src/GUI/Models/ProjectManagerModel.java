@@ -1,6 +1,6 @@
 package GUI.Models;
 
-import BE.ProjectDetails;
+import BE.Documentation;
 import DAL.ProjectManager_DB;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ProjectManagerModel {
 
 
-    public ArrayList<ProjectDetails> loadData() throws SQLServerException, IOException {
+    public ArrayList<Documentation> loadData() throws SQLServerException, IOException {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();
         return projectManager_db.getData();
     }

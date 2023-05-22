@@ -9,17 +9,17 @@ public class Documentation {
     private LocalDate startDate;
     private String docName;
     private LocalDate endDate;
-    private String costumerName;
+    private String customerName;
     private String pdfData;
 
-    public Documentation(int id, String docName, LocalDate startDate,LocalDate endDate, String customerName,int projectId, String pdfData) {
+    public Documentation(int id, String docName, LocalDate startDate,LocalDate endDate, String customerName, String pdfData, int projectId) {
         this.id = id;
         this.docName = docName;
         this.startDate = startDate;
-        this.projectId = projectId;
         this.endDate = endDate;
-        this.costumerName = customerName;
+        this.customerName = customerName;
         this.pdfData = pdfData;
+        this.projectId = projectId;
     }
 
     public int getId() {
@@ -50,12 +50,12 @@ public class Documentation {
         this.docName = docName;
     }
 
-    public String getCostumerName() {
-        return costumerName;
+    public String getCustomerName() {
+        return customerName;
     }
 
     public void setCostumerName(String costumerName) {
-        this.costumerName = costumerName;
+        this.customerName = costumerName;
     }
 
     public void setPdfData(String pdfData) {

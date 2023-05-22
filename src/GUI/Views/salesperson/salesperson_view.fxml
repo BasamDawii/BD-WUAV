@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.SalespersonControllers.SalespersonViewController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.SalespersonControllers.SalespersonViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -46,12 +46,14 @@
       </VBox>
       <VBox prefHeight="700.0" prefWidth="899.0">
          <children>
-            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="700.0" prefWidth="174.0">
+            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="665.0" prefWidth="866.0">
                <columns>
-                  <TableColumn fx:id="projectName" prefWidth="222.0" text="Project Name" />
-                  <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="237.0" text="Start Date" />
-                  <TableColumn fx:id="endDate" minWidth="0.0" prefWidth="219.0" text="End Date" />
-                  <TableColumn fx:id="customerName" prefWidth="220.0" text="Customer Name" />
+                  <TableColumn fx:id="docName" prefWidth="170.933349609375" text="docName" />
+                  <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="199.99984741210938" text="Start Date" />
+                  <TableColumn fx:id="endDate" minWidth="0.0" prefWidth="185.60015869140625" text="End Date" />
+                  <TableColumn fx:id="customerName" prefWidth="187.9998779296875" text="Customer Name" />
+                  <TableColumn fx:id="projectId" prefWidth="87.2000732421875" text="projectId" />
+                  <TableColumn fx:id="id" prefWidth="68.26666259765625" text="id" />
                </columns>
             </TableView>
             <ToolBar prefHeight="40.0" prefWidth="200.0">

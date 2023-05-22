@@ -1,8 +1,8 @@
 package GUI.Controllers.ProjectManagerControllers;
 
 
+import BE.Documentation;
 import BE.Employee;
-import BE.ProjectDetails;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
@@ -28,7 +28,7 @@ public class ProjectManagerViewController implements Initializable {
     @FXML
     private Label usernameLabel;
     @FXML
-    private TableView<ProjectDetails> tableView;
+    private TableView<Documentation> tableView;
     @FXML
     private SplitPane splitPane;
     @FXML
@@ -36,15 +36,15 @@ public class ProjectManagerViewController implements Initializable {
     @FXML
     private ComboBox<String> comboBox2;
     @FXML
-    private TableColumn <ProjectDetails, String> projectName;
+    private TableColumn <Documentation, String> projectName;
     @FXML
-    private TableColumn <ProjectDetails, String> projectDesc;
+    private TableColumn <Documentation, String> projectDesc;
     @FXML
-    private TableColumn <ProjectDetails, Date> startDate;
+    private TableColumn <Documentation, Date> startDate;
     @FXML
-    private TableColumn <ProjectDetails, Date> endDate;
+    private TableColumn <Documentation, Date> endDate;
     @FXML
-    private TableColumn <ProjectDetails, String> customerName;
+    private TableColumn <Documentation, String> customerName;
 
 
     @Override
@@ -66,17 +66,17 @@ public class ProjectManagerViewController implements Initializable {
     public void viewAllProject() throws IOException, SQLServerException {
 
 
-        ArrayList<ProjectDetails> arrayList = new ArrayList<>();
+        ArrayList<Documentation> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
         projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
 
-        ObservableList<ProjectDetails> observableList = tableView.getItems();
+        ObservableList<Documentation> observableList = tableView.getItems();
         tableView.getItems().clear();
         observableList.removeAll();
-        for (ProjectDetails project: arrayList) {
+        for (Documentation project: arrayList) {
             observableList.add(project);
             System.out.println(project.toString());
         }
