@@ -285,7 +285,7 @@ public class TechnicianViewController implements Initializable{
             technicianModel.createNewProject(projectName);
 
             projectNameTXT.clear();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created an event coordinator ..!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
             alert.show();
 
         } catch (Exception e) {
