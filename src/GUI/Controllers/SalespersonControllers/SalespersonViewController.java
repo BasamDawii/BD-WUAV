@@ -37,7 +37,7 @@ public class SalespersonViewController implements Initializable {
     @FXML
     private TableView<Documentation> tableView;
     @FXML
-    private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, dpfDate, projectId;
+    private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
 
     private ProjectManager_DB projectManagerDb;
     @FXML
@@ -76,8 +76,6 @@ public class SalespersonViewController implements Initializable {
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         projectId.setCellValueFactory(new PropertyValueFactory<>("projectId"));
-
-
 
         ObservableList<Documentation> observableList = tableView.getItems();
         tableView.getItems().clear();
@@ -141,10 +139,6 @@ public class SalespersonViewController implements Initializable {
             }
         }
     }
-
-
-
-
 
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

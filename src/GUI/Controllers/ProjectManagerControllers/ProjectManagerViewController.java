@@ -15,36 +15,32 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ProjectManagerViewController implements Initializable {
     private Employee loggedInEmployee;
     @FXML
     private Label usernameLabel;
-    @FXML
-    private TableView<Documentation> tableView;
+
     @FXML
     private SplitPane splitPane;
     @FXML
     private ComboBox<String> comboBox1;
     @FXML
     private ComboBox<String> comboBox2;
+
     @FXML
-    private TableColumn <Documentation, String> projectName;
+    private TableView<Documentation> tableView;
     @FXML
-    private TableColumn <Documentation, String> projectDesc;
-    @FXML
-    private TableColumn <Documentation, Date> startDate;
-    @FXML
-    private TableColumn <Documentation, Date> endDate;
-    @FXML
-    private TableColumn <Documentation, String> customerName;
+    private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
 
 
     @Override
@@ -65,13 +61,14 @@ public class ProjectManagerViewController implements Initializable {
     }
     public void viewAllProject() throws IOException, SQLServerException {
 
-
         ArrayList<Documentation> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
-        projectName.setCellValueFactory(new PropertyValueFactory<>("projectName"));
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        customerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
+        customerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        projectId.setCellValueFactory(new PropertyValueFactory<>("projectId"));
 
         ObservableList<Documentation> observableList = tableView.getItems();
         tableView.getItems().clear();
@@ -130,5 +127,48 @@ public class ProjectManagerViewController implements Initializable {
         this.loggedInEmployee = employee;
         usernameLabel.setText(employee.getUsername());
         usernameLabel.setTranslateX(90);
+    }
+
+    public void tableViewSelected(MouseEvent event) {
+    }
+
+    public void handleDeleteButton(ActionEvent event) {
+        // Get the selected documentation from the table view
+        Documentation selectedDocumentation = tableView.getSelectionModel().getSelectedItem();
+        if (selectedDocumentation == null) {
+            // No item selected, show an error message
+            showAlert(Alert.AlertType.ERROR, "Error", "Please select a document from the table.");
+            return;
+        }
+
+        // Display a confirmation dialog before deleting
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText("Delete Documentation");
+        alert.setContentText("Are you sure you want to delete the selected documentation?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // User confirmed the deletion, proceed with deleting the documentation
+
+            // Call the delete method in your ProjectManagerModel or ProjectManager_DB to delete the documentation from the database
+            boolean deleted = new ProjectManagerModel().deleteDocumentation(selectedDocumentation);
+            if (deleted) {
+                // Remove the selected documentation from the table view
+                tableView.getItems().remove(selectedDocumentation);
+
+                // Show a success message
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Documentation deleted successfully!");
+            } else {
+                // Show an error message if deletion fails
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete the documentation.");
+            }
+        }
+    }
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

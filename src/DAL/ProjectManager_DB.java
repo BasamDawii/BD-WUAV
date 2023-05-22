@@ -40,19 +40,17 @@ public class ProjectManager_DB{
     }
 
 
-        public void deletePDF(Project project) {
-        String sql = "DELETE FROM Projects WHERE id = ?";
-
+    public void deleteDocumentation(int documentId) {
+        String sql = "DELETE FROM Documentation WHERE id = ?";
         try (Connection connection = dbConnector.getConnected(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, project.getId());
+            statement.setInt(1, documentId);
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Deleting project failed, no rows affected.");
+                throw new SQLException("Deleting documentation failed, no rows affected.");
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, for example, log it or rethrow it.
-            throw new RuntimeException("Error while trying to delete project.", e);
+            throw new RuntimeException("Error while trying to delete documentation.", e);
         }
     }
 

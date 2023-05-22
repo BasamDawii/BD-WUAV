@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1132.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1132.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -47,13 +47,15 @@
       </VBox>
       <VBox prefHeight="703.0" prefWidth="830.0">
          <children>
-            <TableView fx:id="tableView" prefHeight="665.0" prefWidth="830.0">
-              <columns>
-                <TableColumn fx:id="projectName" prefWidth="188.0" text="Project Name" />
-                  <TableColumn fx:id="startDate" prefWidth="222.0" text="Start Date" />
-                  <TableColumn fx:id="endDate" prefWidth="210.0" text="End Date" />
-                  <TableColumn fx:id="customerName" prefWidth="209.0" text="Customer Name" />
-              </columns>
+            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="665.0" prefWidth="866.0">
+               <columns>
+                  <TableColumn fx:id="docName" prefWidth="170.933349609375" text="docName" />
+                  <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="199.99984741210938" text="Start Date" />
+                  <TableColumn fx:id="endDate" minWidth="0.0" prefWidth="185.60015869140625" text="End Date" />
+                  <TableColumn fx:id="customerName" prefWidth="187.9998779296875" text="Customer Name" />
+                  <TableColumn fx:id="projectId" prefWidth="87.2000732421875" text="projectId" />
+                  <TableColumn fx:id="id" prefWidth="68.26666259765625" text="id" />
+               </columns>
             </TableView>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
                <items>
@@ -72,6 +74,7 @@
                   </Text>
                   <ComboBox fx:id="comboBox2" prefWidth="150.0" />
                   <Button mnemonicParsing="false" onAction="#confirmTechnician" text="Add" textFill="#222121" />
+                  <Button mnemonicParsing="false" onAction="#handleDeleteButton" text="Delete" />
                </items>
             </ToolBar>
          </children>
