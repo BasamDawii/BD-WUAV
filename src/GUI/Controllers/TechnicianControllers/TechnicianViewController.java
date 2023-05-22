@@ -165,36 +165,66 @@ public class TechnicianViewController implements Initializable{
 
         // Generate the PDF
         try {
-            // Create a temporary PDF file
-            File tempPdfFile = File.createTempFile("project-", ".pdf");
+            // Create a new PDF document
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
 
-            // Generate the PDF and save it to the temporary file
-            byte[] pdfData = generatePdf(docName, startDate, endDate, customerName);
-            Files.write(tempPdfFile.toPath(), pdfData);
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                // Save the image and drawings to the PDF
+                Image image = uploadedImageView.getImage();
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                PDImageXObject pdImage = LosslessFactory.createFromImage(document, bufferedImage);
+                contentStream.drawImage(pdImage, 50, 450, 500, 300); // Adjust the position and size as needed
 
-            // Save the selected image
-            Image image = uploadedImageView.getImage();
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-            String imagePath = tempPdfFile.getParent() + File.separator + "image.jpg";
-            ImageIO.write(bufferedImage, "jpg", new File(imagePath));
+                // Save the project information to the PDF
+                contentStream.setFont(PDType1Font.HELVETICA, 12);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, 400); // Adjust the position as needed
+                contentStream.showText("Project Description: " + docName);
+                contentStream.newLineAtOffset(0, -14);
+                contentStream.showText("Start Date: " + startDate);
+                contentStream.newLineAtOffset(0, -14);
+                contentStream.showText("End Date: " + endDate);
+                contentStream.newLineAtOffset(0, -14);
+                contentStream.showText("Customer Name: " + customerName);
+                contentStream.newLineAtOffset(0, -14);
 
-            // Encode the PDF data and image path to Base64
+                // Save the text to the PDF
+                String text = textFieldArea.getText();
+                String[] lines = text.split("\n");
+                for (String line : lines) {
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -14); // Adjust the line spacing as needed
+                }
+                contentStream.endText();
+            }
+
+            // Save the PDF document
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            document.save(outputStream);
+            document.close();
+
+            // Get the PDF data as bytes
+            byte[] pdfData = outputStream.toByteArray();
+
+            // Encode the PDF data to Base64
             String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
-            String encodedImagePath = Base64.getEncoder().encodeToString(imagePath.getBytes(StandardCharsets.UTF_8));
 
             Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
-            // Save the generated PDF and image path to the database
+
+            // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase(documentation);
 
             // Display a success message
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Project details, PDF, and image saved successfully!");
-
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Project details and PDF saved successfully!");
         } catch (IOException e) {
             e.printStackTrace();
             // Display an error message
-            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details, PDF, and image.");
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details and PDF.");
         }
     }
+
 
 
     // Add this helper method to display alerts
