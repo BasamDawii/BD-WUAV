@@ -1,24 +1,24 @@
 /* Button Styles */
 .button {
-    -fx-background-color: #5F9EA0; /* Green background color */
-    -fx-border-color: #5F9EA0; /* Green border color */
+    -fx-background-color: #3498db; /* Blue background color */
+    -fx-border-color: #3498db; /* Blue border color */
     -fx-text-fill: white; /* Text color */
     -fx-font-weight: bold; /* Bold text */
-    -fx-padding: 6px 10px; /* Padding around the button */
-
+    -fx-padding: 8px 12px; /* Padding around the button */
+    -fx-cursor: hand; /* Cursor style */
 }
 
 .button:hover {
-    -fx-background-color: #008B8B; /* Darker green background color on hover */
+    -fx-background-color: #2980b9; /* Darker blue background color on hover */
 }
 
 /* Table View Styles */
 .table-view {
-    -fx-background-color: #5F9EA0; /* Table background color */
+    -fx-background-color: #f1f1f1; /* Table background color */
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #f2f2f2; /* Column header background color */
+    -fx-background-color: #e6e6e6; /* Column header background color */
 }
 
 .table-view .column-header {
@@ -26,11 +26,11 @@
 }
 
 .table-row-cell {
-    -fx-background-color: #f9f9f9; /* Table row background color */
+    -fx-background-color: #ffffff; /* Table row background color */
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #f2f2f2; /* Alternate table row background color */
+    -fx-background-color: #f1f1f1; /* Alternate table row background color */
 }
 
 .table-cell {
@@ -41,9 +41,7 @@
     -fx-background-color: transparent; /* Transparent background for empty cells */
 }
 
-
-
-
+/* Input Styles */
 
 
 
