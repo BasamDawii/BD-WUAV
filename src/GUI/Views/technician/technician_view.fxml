@@ -114,7 +114,7 @@
               <items>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                   <ComboBox fx:id="comboBoxSelectProject" prefHeight="25.0" prefWidth="143.0" />
-                <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="96.0" text="Save Local" translateX="13.0" />
+                 <Button styleClass="download-button" mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="96.0" text="Save Local" translateX="13.0" />
                  <Button fx:id="saveButton" onAction="#saveButton" text="Upload to DB" translateX="27.0" />
                  <Button mnemonicParsing="false" onAction="#newProjectButton" text="New Project" translateX="41.0" />
                  <TextField fx:id="projectNameTXT" prefHeight="25.0" prefWidth="149.0" promptText="New Project Name" translateX="41.0">

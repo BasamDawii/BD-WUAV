@@ -1,11 +1,12 @@
 /* Button Styles */
 .button {
-    -fx-background-color: #3498db; /* Blue background color */
-    -fx-border-color: #3498db; /* Blue border color */
+    -fx-background-color: #808080; /* Gray background color */
+    -fx-border-color: #dcdcdc; /* Light gray border color */
     -fx-text-fill: white; /* Text color */
     -fx-font-weight: bold; /* Bold text */
     -fx-padding: 8px 12px; /* Padding around the button */
     -fx-cursor: hand; /* Cursor style */
+    -fx-background-radius: 4px; /* Rounded corners */
 }
 
 .button:hover {
@@ -42,6 +43,28 @@
 }
 
 /* Input Styles */
+.text-input {
+    -fx-background-color: #f1f1f1; /* Text input background color */
+    -fx-border-color: #dcdcdc; /* Light gray border color */
+    -fx-padding: 8px 12px; /* Padding around the text input */
+    -fx-font-size: 14px; /* Font size of the text input */
+    -fx-prompt-text-fill: #999999; /* Color of the prompt text */
+    -fx-background-radius: 4px; /* Rounded corners */
+}
 
+.text-input:focused {
+    -fx-border-color: #3498db; /* Border color when text input is focused */
+}
 
+.text-area {
+    -fx-background-color: #f1f1f1; /* Text area background color */
+    -fx-border-color: #e6e6e6; /* Text area border color */
+    -fx-padding: 8px 12px; /* Padding around the text area */
+    -fx-font-size: 14px; /* Font size of the text area */
+    -fx-prompt-text-fill: #999999; /* Color of the prompt text */
+    -fx-background-radius: 4px; /* Rounded corners */
+}
 
+.text-area:focused {
+    -fx-border-color: #3498db; /* Border color when text area is focused */
+}
