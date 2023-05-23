@@ -40,4 +40,8 @@ public class ProjectManagerModel {
             return false;
         }
     }
+    public int getProjectIdByName(String projectName) {
+        ProjectManager_DB projectManager_db = new ProjectManager_DB();
+        return projectManager_db.getProjectIdByName(projectName);
+    }
 }

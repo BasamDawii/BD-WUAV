@@ -54,6 +54,23 @@ public class ProjectManager_DB{
         }
     }
 
+    public int getProjectIdByName(String projectName) {
+        String sql = "SELECT id FROM Project WHERE projectName = ?";
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, projectName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as per your application's requirements
+        }
+        return -1; // Project not found with the given name
+    }
+
     public Documentation getDocumentById(int documentId) {
         String sql = "SELECT * FROM Documentation WHERE id = ?";
         try (Connection connection = dbConnector.getConnected();

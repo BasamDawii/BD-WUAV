@@ -35,6 +35,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -90,16 +91,19 @@ public class TechnicianViewController implements Initializable{
             throw new RuntimeException(e);
         }
     }
-    public void selectedProject()throws IOException, SQLServerException{
-        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
 
-        ObservableList<String> list1 = comboBoxSelectProject.getItems();
-        comboBoxSelectProject.getItems().clear();
 
-        for (String i: projectId) {
-            list1.add(i+"");
-        }
+
+    public int selectedProject() throws IOException, SQLServerException {
+        String selectedProject = (String) comboBoxSelectProject.getValue();
+
+        // Retrieve the corresponding project ID from the database
+        int projectId = new ProjectManagerModel().getProjectIdByName(selectedProject);
+        System.out.println(selectedProject);
+        System.out.println(projectId);
+        return projectId;
     }
+
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -210,8 +214,17 @@ public class TechnicianViewController implements Initializable{
 
             // Encode the PDF data to Base64
             String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
-
-            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
+            // Retrieve the selected project ID
+            int selectedProjectId;
+            try {
+                selectedProjectId = selectedProject();
+            } catch (IOException | SQLServerException e) {
+                e.printStackTrace();
+                // Display an error message
+                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while retrieving the selected project.");
+                return;
+            }
+            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, selectedProjectId);
 
             // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase(documentation);
@@ -244,7 +257,7 @@ public class TechnicianViewController implements Initializable{
     }
     private void navigateToView(String viewPath, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        Parent root = loader.load(getClass().getResource(viewPath));
+        Parent root = loader.load();
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
