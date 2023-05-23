@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.EditPic">
+<AnchorPane prefHeight="400.0" prefWidth="711.0" stylesheets="@../CSS/design.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.EditPic">
     <SplitPane dividerPositions="0.25" prefHeight="400.0" prefWidth="600.0">
         <items>
             <VBox fx:id="iconPane" spacing="10.0" />
@@ -14,6 +14,6 @@
         </items>
     </SplitPane>
       <Button fx:id="exampleButton" layoutX="611.0" layoutY="14.0" onAction="#uploadPictures" text="Upload Image" />
-      <Button fx:id="saveimage" layoutX="607.0" layoutY="85.0" mnemonicParsing="false" onAction="#saveImageToProgram" text="Save the Image" />
-      <Button layoutX="635.0" layoutY="51.0" mnemonicParsing="false" onAction="#drawButton" text="Draw" />
+      <Button fx:id="saveimage" layoutX="607.0" layoutY="88.0" mnemonicParsing="false" onAction="#saveImageToProgram" text="Save the Image" />
+      <Button layoutX="635.0" layoutY="51.0" mnemonicParsing="false" onAction="#drawButton" prefHeight="17.0" prefWidth="53.0" text="Draw" />
 </AnchorPane>

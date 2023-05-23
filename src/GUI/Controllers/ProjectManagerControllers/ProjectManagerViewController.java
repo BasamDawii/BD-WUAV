@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -46,6 +48,7 @@ public class ProjectManagerViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            checkProjectStatus();
             viewAllProject();
             addTechnician();
         } catch (IOException e) {
@@ -170,5 +173,29 @@ public class ProjectManagerViewController implements Initializable {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void checkProjectStatus() {
+        ArrayList<Documentation> projects = null;
+        try {
+            projects = new ProjectManagerModel().loadData();
+        } catch (SQLServerException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        LocalDate currentDate = LocalDate.now();
+
+        for (Documentation project : projects) {
+            LocalDate startDate = project.getStartDate();
+            long monthsSinceStart = ChronoUnit.MONTHS.between(startDate, currentDate);
+
+            if (monthsSinceStart >= 48) {
+                String projectName = project.getDocName(); // Update this line
+                String message = "Project " + projectName + " has reached 48 months.";
+                showAlert(Alert.AlertType.WARNING, "Project Exceeded 48 Months", message);
+                // Handle deletion or extension of the project based on user's choice
+            }
+        }
     }
 }

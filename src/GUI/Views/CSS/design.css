@@ -1,3 +1,45 @@
+/* Button Styles */
+.button {
+    -fx-background-color: #5F9EA0; /* Green background color */
+    -fx-border-color: #5F9EA0; /* Green border color */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-weight: bold; /* Bold text */
+    -fx-padding: 6px 10px; /* Padding around the button */
+
+}
+
+.button:hover {
+    -fx-background-color: #008B8B; /* Darker green background color on hover */
+}
+
+/* Table View Styles */
+.table-view {
+    -fx-background-color: #5F9EA0; /* Table background color */
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f2f2f2; /* Column header background color */
+}
+
+.table-view .column-header {
+    -fx-font-weight: bold; /* Bold column header text */
+}
+
+.table-row-cell {
+    -fx-background-color: #f9f9f9; /* Table row background color */
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f2f2f2; /* Alternate table row background color */
+}
+
+.table-cell {
+    -fx-alignment: center; /* Center-align table cell contents */
+}
+
+.table-cell:empty {
+    -fx-background-color: transparent; /* Transparent background for empty cells */
+}
 
 
 

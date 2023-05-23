@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1132.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="1200.0" style="-fx-background-color: #000000;" stylesheets="@../CSS/design.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -45,9 +45,9 @@
                </VBox.margin></Button>
          </children>
       </VBox>
-      <VBox prefHeight="703.0" prefWidth="830.0">
+      <VBox prefHeight="703.0" prefWidth="904.0">
          <children>
-            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="665.0" prefWidth="866.0">
+            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="662.0" prefWidth="853.0">
                <columns>
                   <TableColumn fx:id="docName" prefWidth="170.933349609375" text="docName" />
                   <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="199.99984741210938" text="Start Date" />
