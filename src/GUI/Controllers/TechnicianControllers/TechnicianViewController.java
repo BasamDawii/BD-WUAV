@@ -2,6 +2,7 @@ package GUI.Controllers.TechnicianControllers;
 
 import BE.Documentation;
 import BE.Employee;
+import BE.Project;
 import DAL.ProjectManager_DB;
 import GUI.Models.ProjectManagerModel;
 import GUI.Models.TechnicianModel;
@@ -90,16 +91,12 @@ public class TechnicianViewController implements Initializable{
             throw new RuntimeException(e);
         }
     }
-    public void selectedProject()throws IOException, SQLServerException{
-        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
-
-        ObservableList<String> list1 = comboBoxSelectProject.getItems();
+    public void selectedProject() throws IOException, SQLServerException {
+        ArrayList<Project> projects = new ProjectManagerModel().loadProjects();
         comboBoxSelectProject.getItems().clear();
-
-        for (String i: projectId) {
-            list1.add(i+"");
-        }
+        comboBoxSelectProject.getItems().addAll(projects);
     }
+
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -211,8 +208,9 @@ public class TechnicianViewController implements Initializable{
             // Encode the PDF data to Base64
             String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
 
-            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
-
+            Project selectedProject = (Project) comboBoxSelectProject.getSelectionModel().getSelectedItem();
+            int projectId = selectedProject.getProjectId();
+            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, projectId);
             // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase(documentation);
 

@@ -1,6 +1,7 @@
 package GUI.Models;
 
 import BE.Documentation;
+import BE.Project;
 import DAL.ProjectManager_DB;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -18,6 +19,11 @@ public class ProjectManagerModel {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();
         return projectManager_db.getProjectNames();
     }
+    public ArrayList<Project> loadProjects() {
+        ProjectManager_DB projectManager_db = new ProjectManager_DB();
+        return projectManager_db.getProjects();
+    }
+
 
     public ArrayList<String> loadTechnicianNames() {
         ProjectManager_DB projectManager_db = new ProjectManager_DB();

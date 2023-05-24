@@ -19,6 +19,28 @@ public class ProjectManager_DB{
     }
 
 
+    public ArrayList<Project> getProjects() {
+        ArrayList<Project> projects = new ArrayList<>();
+        String query = "SELECT * FROM Project";
+        try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String projectName = rs.getString("projectName");
+                // Add all the other fields of your project here, using the appropriate getter methods from ResultSet
+                // For example:
+                // String field2 = rs.getString("field2");
+                // int field3 = rs.getInt("field3");
+                // And so on...
+
+                Project project = new Project(id, projectName /*, field2, field3, ... */ );
+                projects.add(project);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while retrieving projects.", e);
+        }
+        return projects;
+    }
 
     public void saveDocToDataBase(Documentation documentation){
         String sql = "INSERT INTO Documentation (docName, startDate, endDate, customerName, pdfFile, projectId) VALUES (?, ?, ?, ?,?,?)";
