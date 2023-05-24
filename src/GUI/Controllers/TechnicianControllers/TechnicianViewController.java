@@ -99,7 +99,9 @@ public class TechnicianViewController implements Initializable{
         for (String i: projectId) {
             list1.add(i+"");
         }
+        comboBoxSelectProject.setItems(list1);
     }
+
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -197,8 +199,7 @@ public class TechnicianViewController implements Initializable{
                     contentStream.showText(line);
                     contentStream.newLineAtOffset(0, -14); // Adjust the line spacing as needed
                 }
-                contentStream.endText();
-            }
+                contentStream.endText();            }
 
             // Save the PDF document
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -211,9 +212,11 @@ public class TechnicianViewController implements Initializable{
             // Encode the PDF data to Base64
             String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
 
-            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
 
-            // Save the generated PDF to the database
+
+int projectId = Integer.parseInt(selectedProjectId);
+Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdf           String selectedProjectId = comboBoxSelectProject.getSelectionModel().getSelectedItem().split(" ")[0];
+ // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase(documentation);
 
             // Display a success message
@@ -228,7 +231,7 @@ public class TechnicianViewController implements Initializable{
 
 
     // Add this helper method to display alerts
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
+    private void showAlert(Alert.AlertType alertType, String title, String message) {    private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(message);
