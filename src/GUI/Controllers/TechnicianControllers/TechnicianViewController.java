@@ -2,6 +2,7 @@ package GUI.Controllers.TechnicianControllers;
 
 import BE.Documentation;
 import BE.Employee;
+import BE.Project;
 import DAL.ProjectManager_DB;
 import GUI.Models.ProjectManagerModel;
 import GUI.Models.TechnicianModel;
@@ -83,21 +84,19 @@ public class TechnicianViewController implements Initializable{
         try {
             projectManagerDb = new ProjectManager_DB();
             technicianModel = new TechnicianModel();
-            selectedProject();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    public void selectedProject()throws IOException, SQLServerException{
-        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
+    public void selectedProject() throws IOException, SQLException {
+        ObservableList<Project> projectId  = technicianModel.getAllProjectsByTechnicianId(loggedInEmployee.getId());
+        System.out.println(projectId.size());
 
-        ObservableList<String> list1 = comboBoxSelectProject.getItems();
+        ObservableList<Project> list1 = comboBoxSelectProject.getItems();
         comboBoxSelectProject.getItems().clear();
 
-        for (String i: projectId) {
-            list1.add(i+"");
+        for (Project i: projectId) {
+            list1.add(i);
         }
     }
     public void uploadButton(ActionEvent event) {
@@ -120,10 +119,12 @@ public class TechnicianViewController implements Initializable{
         projectManagerDb = new ProjectManager_DB();
     }
 
-    public void setLoggedInEmployee(Employee employee) {
+    public void setLoggedInEmployee(Employee employee) throws SQLException, IOException {
         this.loggedInEmployee = employee;
         usernameLabel.setText( employee.getUsername());
         usernameLabel.setTranslateX(65);
+
+        selectedProject();
     }
 
 
@@ -154,7 +155,10 @@ public class TechnicianViewController implements Initializable{
         }
 
     }
-
+    public int getSelectedProjectId(){
+        Project selectedProject = (Project) comboBoxSelectProject.getSelectionModel().getSelectedItem();
+        return selectedProject.getId();
+    }
 
     public void saveButton(ActionEvent event) {
         // Get the project information from the input fields
@@ -211,7 +215,7 @@ public class TechnicianViewController implements Initializable{
             // Encode the PDF data to Base64
             String encodedPdfData = Base64.getEncoder().encodeToString(pdfData);
 
-            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, 1);
+            Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, getSelectedProjectId());
 
             // Save the generated PDF to the database
             projectManagerDb.saveDocToDataBase(documentation);
@@ -323,4 +327,17 @@ public class TechnicianViewController implements Initializable{
         }
     }
 
+
+    public void EditDocumentationButton(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/editDocView.fxml"));
+            Parent editDoc = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Edit Documentation");
+            stage.setScene(new Scene(editDoc));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

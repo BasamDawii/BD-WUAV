@@ -4,7 +4,7 @@
     -fx-border-color: #dcdcdc; /* Light gray border color */
     -fx-text-fill: white; /* Text color */
     -fx-font-weight: bold; /* Bold text */
-    -fx-padding: 8px 12px; /* Padding around the button */
+    -fx-padding: 8px 10px; /* Padding around the button */
     -fx-cursor: hand; /* Cursor style */
     -fx-background-radius: 4px; /* Rounded corners */
 }
@@ -17,6 +17,10 @@
 .table-view {
     -fx-background-color: #f1f1f1; /* Table background color */
 }
+.table-row-cell:selected {
+   -fx-background-color: gray;
+
+}
 
 .table-view .column-header-background {
     -fx-background-color: #e6e6e6; /* Column header background color */
@@ -26,13 +30,9 @@
     -fx-font-weight: bold; /* Bold column header text */
 }
 
-.table-row-cell {
-    -fx-background-color: #ffffff; /* Table row background color */
-}
 
-.table-row-cell:odd {
-    -fx-background-color: #f1f1f1; /* Alternate table row background color */
-}
+
+
 
 .table-cell {
     -fx-alignment: center; /* Center-align table cell contents */
@@ -46,8 +46,8 @@
 .text-input {
     -fx-background-color: #f1f1f1; /* Text input background color */
     -fx-border-color: #dcdcdc; /* Light gray border color */
-    -fx-padding: 8px 12px; /* Padding around the text input */
-    -fx-font-size: 14px; /* Font size of the text input */
+    -fx-padding: 8px 10px; /* Padding around the text input */
+    -fx-font-size: 10px; /* Font size of the text input */
     -fx-prompt-text-fill: #999999; /* Color of the prompt text */
     -fx-background-radius: 4px; /* Rounded corners */
 }
@@ -60,7 +60,7 @@
     -fx-background-color: #f1f1f1; /* Text area background color */
     -fx-border-color: #e6e6e6; /* Text area border color */
     -fx-padding: 8px 12px; /* Padding around the text area */
-    -fx-font-size: 14px; /* Font size of the text area */
+    -fx-font-size: 12px; /* Font size of the text area */
     -fx-prompt-text-fill: #999999; /* Color of the prompt text */
     -fx-background-radius: 4px; /* Rounded corners */
 }
@@ -68,3 +68,7 @@
 .text-area:focused {
     -fx-border-color: #3498db; /* Border color when text area is focused */
 }
+
+
+
+

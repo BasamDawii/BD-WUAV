@@ -2,6 +2,7 @@ package DAL;
 
 import BE.Documentation;
 import BE.Project;
+import BE.Technician;
 import DAL.database.DBConnector;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProjectManager_DB{
@@ -139,6 +141,43 @@ public class ProjectManager_DB{
         }
     }
 
+    public List< Project > getAllProjects() throws SQLException {
+        List < Project > allProjects = new ArrayList < > ();
+        try (Connection conn = dbConnector.getConnected()) {
+            String sql = "SELECT * FROM Project;";
+            Statement statement = conn.createStatement();
+            //Run the SQL statementgti
+            if (statement.execute(sql)) {
+                ResultSet resultSet = statement.getResultSet();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String projectName = resultSet.getString("projectName");
+
+                    allProjects.add(new Project(id, projectName));
+                }
+            }
+        }
+        return allProjects;
+    }
+    public List<Technician> getAllTechnician() throws SQLException {
+        List < Technician > allTechnician = new ArrayList < > ();
+        try (Connection conn = dbConnector.getConnected()) {
+            String sql = "SELECT * FROM Employee WHERE EmployeeType = 'Technician';";
+            Statement statement = conn.createStatement();
+            //Run the SQL statementgti
+            if (statement.execute(sql)) {
+                ResultSet resultSet = statement.getResultSet();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String username = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+
+                    allTechnician.add(new Technician(id,username,password));
+                }
+            }
+        }
+        return allTechnician;
+    }
 
     public boolean addTechnicianToProject(int pid, int tid){
         String query = "Insert into Project_Employee(projectId, employeeId) VALUES(?,?)";

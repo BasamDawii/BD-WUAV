@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: black;" stylesheets="@../CSS/design.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.TechnicianViewController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: black;" stylesheets="@../CSS/design.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controllers.TechnicianControllers.TechnicianViewController">
    <children>
       <VBox prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #191919;">
          <children>
@@ -39,7 +39,7 @@
                <font>
                   <Font size="16.0" />
                </font></Label>
-            <Button fx:id="viewAllProject" mnemonicParsing="false" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="All My Projects" textFill="WHITE">
+            <Button fx:id="viewAllProject" mnemonicParsing="false" onAction="#EditDocumentationButton" prefHeight="50.0" prefWidth="259.0" style="-fx-background-color: #191919;" text="All My Projects" textFill="WHITE">
                <VBox.margin>
                   <Insets top="110.0" />
                </VBox.margin>
@@ -66,7 +66,7 @@
                   <Insets left="340.0" top="5.0" />
                </VBox.margin>
             </Text>
-            <Button mnemonicParsing="false" onAction="#uploadButton" prefHeight="20.0" prefWidth="130.0" text="Upload Pictures">
+            <Button mnemonicParsing="false" onAction="#uploadButton" prefHeight="30.0" prefWidth="130.0" text="Upload Pictures">
                <VBox.margin>
                   <Insets left="425.0" />
                </VBox.margin>
@@ -96,15 +96,15 @@
                <items>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" />
-                  <TextField fx:id="docNameTXT" prefHeight="26.0" prefWidth="140.0" promptText="Doc Name" />
+                  <TextField fx:id="docNameTXT" prefHeight="30.0" prefWidth="140.0" promptText="Doc Name" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" />
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="84.13671875" />
-                  <DatePicker fx:id="startDateTXT" prefHeight="26.0" prefWidth="150.0" promptText="Start Date" />
+                  <DatePicker fx:id="startDateTXT" prefHeight="30.0" prefWidth="150.0" promptText="Start Date" />
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="79.13671875" />
-                  <DatePicker fx:id="endDateTXT" prefHeight="26.0" prefWidth="150.0" promptText="End Date" />
+                  <DatePicker fx:id="endDateTXT" prefHeight="30.0" prefWidth="150.0" promptText="End Date" />
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="74.13671875" />
-                  <TextField fx:id="customerNameTXT" promptText="Customer Name" />
+                  <TextField fx:id="customerNameTXT" prefHeight="30.0" prefWidth="135.0" promptText="Customer Name" />
                </items>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -113,10 +113,10 @@
             <ToolBar prefHeight="30.0" prefWidth="942.0" style="-fx-background-color: #ffffff;">
               <items>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                  <ComboBox fx:id="comboBoxSelectProject" prefHeight="25.0" prefWidth="143.0" />
-                 <Button styleClass="download-button" mnemonicParsing="false" onAction="#SaveLocal" prefHeight="26.0" prefWidth="96.0" text="Save Local" translateX="13.0" />
-                 <Button fx:id="saveButton" onAction="#saveButton" text="Upload to DB" translateX="27.0" />
-                 <Button mnemonicParsing="false" onAction="#newProjectButton" text="New Project" translateX="41.0" />
+                  <ComboBox fx:id="comboBoxSelectProject" prefHeight="34.0" prefWidth="143.0" />
+                 <Button mnemonicParsing="false" onAction="#SaveLocal" prefHeight="30.0" prefWidth="96.0" styleClass="download-button" text="Save Local" translateX="13.0" />
+                 <Button fx:id="saveButton" onAction="#saveButton" prefHeight="30.0" prefWidth="98.0" text="Upload to DB" translateX="27.0" />
+                 <Button mnemonicParsing="false" onAction="#newProjectButton" prefHeight="30.0" prefWidth="91.0" text="New Project" translateX="41.0" />
                  <TextField fx:id="projectNameTXT" prefHeight="25.0" prefWidth="149.0" promptText="New Project Name" translateX="41.0">
                      <rotationAxis>
                         <Point3D x="21.0" z="1.0" />

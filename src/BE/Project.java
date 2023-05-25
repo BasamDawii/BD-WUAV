@@ -19,4 +19,9 @@ public class Project {
     public String getProjectName() {
         return projectName;
     }
+
+    @Override
+    public String toString() {
+        return projectName;
+    }
 }

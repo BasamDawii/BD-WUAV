@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -49,7 +50,7 @@ public class SalespersonViewController implements Initializable {
             viewAllProject();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (SQLServerException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -66,7 +67,7 @@ public class SalespersonViewController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    public void viewAllProject() throws IOException, SQLServerException {
+    public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();

@@ -1,11 +1,13 @@
 package DAL;
 
+import BE.Documentation;
 import BE.Project;
 import BE.Technician;
 import DAL.database.DBConnector;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,4 +63,30 @@ public class Technician_DB {
         }
         return allProjects;
     }
+
+
+
+    public List<Project> getAllProjectsByTechnicianId(int technicianId) {
+        List < Project > allProjects = new ArrayList < > ();
+        String sql = "SELECT Project.* " +
+                "FROM Project " +
+                "INNER JOIN Project_Employee ON Project.id = Project_Employee.projectId " +
+                "WHERE Project_Employee.employeeId = ?;";
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, technicianId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String projectName = resultSet.getString("projectName");
+                    allProjects.add(new Project(id, projectName));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as per your application's requirements
+        }
+        return allProjects; // Document not found with the given ID
+    }
+
 }

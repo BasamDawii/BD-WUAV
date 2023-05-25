@@ -3,6 +3,8 @@ package GUI.Controllers.ProjectManagerControllers;
 
 import BE.Documentation;
 import BE.Employee;
+import BE.Project;
+import BE.Technician;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
@@ -20,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -35,25 +38,27 @@ public class ProjectManagerViewController implements Initializable {
     @FXML
     private SplitPane splitPane;
     @FXML
-    private ComboBox<String> comboBox1;
+    private ComboBox<Project> comboBox1;
     @FXML
-    private ComboBox<String> comboBox2;
+    private ComboBox<Technician> comboBox2;
 
     @FXML
     private TableView<Documentation> tableView;
     @FXML
     private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
-
+    ProjectManagerModel projectManagerModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            projectManagerModel = new ProjectManagerModel();
             checkProjectStatus();
             viewAllProject();
             addTechnician();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (SQLServerException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -62,7 +67,7 @@ public class ProjectManagerViewController implements Initializable {
     public void handleLogoutButton(ActionEvent event) throws IOException, SQLServerException {
         navigateToView("/GUI/Views/LoginView.fxml", event);
     }
-    public void viewAllProject() throws IOException, SQLServerException {
+    public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
         arrayList = new ProjectManagerModel().loadData();
@@ -82,25 +87,36 @@ public class ProjectManagerViewController implements Initializable {
         }
         tableView.setItems(observableList);
     }
-    public void addTechnician() throws IOException, SQLServerException {
-        ArrayList<String> projectId = new ProjectManagerModel().loadProjectNames();
-        ArrayList<String> technicianId = new ProjectManagerModel().loadTechnicianNames();
+    public void addTechnician() throws IOException, SQLException {
+        ObservableList<Project> projectId = projectManagerModel.getAllProjects();
+        ObservableList<Technician> technicianId = projectManagerModel.getAllTechnicians();
 
-        ObservableList<String> list1 = comboBox1.getItems();
-        ObservableList<String> list2 = comboBox2.getItems();
+        ObservableList<Project> list1 = comboBox1.getItems();
+        ObservableList<Technician> list2 = comboBox2.getItems();
         comboBox1.getItems().clear();
         comboBox2.getItems().clear();
-        for (String i: projectId) {
-            list1.add(i+"");
+        for (Project i: projectId) {
+            list1.add(i);
         }
-        for (String i: technicianId) {
-            list2.add(i+"");
+        for (Technician i: technicianId) {
+            list2.add(i);
         }
 
     }
-    public void confirmTechnician(ActionEvent event) throws IOException, SQLServerException {
-        int projectId = Integer.parseInt(comboBox1.getValue());
-        int technicianId = Integer.parseInt(comboBox2.getValue());
+
+    public int getSelectedProjectId(){
+        Project selectedProject = (Project) comboBox1.getSelectionModel().getSelectedItem();
+        return selectedProject.getId();
+    }
+
+    public int getSelectedTechnicianId(){
+        Technician selectedTechnician = (Technician) comboBox2.getSelectionModel().getSelectedItem();
+        return selectedTechnician.getId();
+    }
+
+    public void confirmTechnician(ActionEvent event) throws SQLException {
+        int projectId = getSelectedProjectId();
+        int technicianId = getSelectedTechnicianId();
         boolean added = new ProjectManagerModel().addEmpProject(projectId,technicianId);
         if (added){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -135,7 +151,7 @@ public class ProjectManagerViewController implements Initializable {
     public void tableViewSelected(MouseEvent event) {
     }
 
-    public void handleDeleteButton(ActionEvent event) {
+    public void handleDeleteButton(ActionEvent event) throws SQLException {
         // Get the selected documentation from the table view
         Documentation selectedDocumentation = tableView.getSelectionModel().getSelectedItem();
         if (selectedDocumentation == null) {
@@ -182,6 +198,8 @@ public class ProjectManagerViewController implements Initializable {
         } catch (SQLServerException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         LocalDate currentDate = LocalDate.now();

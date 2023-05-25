@@ -18,6 +18,9 @@ public class TechnicianManager {
     public List<Project> getAllProjects() throws SQLException {
         return technician_db.getAllProjects();
     }
+    public List<Project> getAllProjectsByTechnicianId(int technicianId) throws SQLException {
+        return technician_db.getAllProjectsByTechnicianId(technicianId);
+    }
 
     public Project createNewProject(String projectName) throws Exception {
         return technician_db.createNewProject(projectName);

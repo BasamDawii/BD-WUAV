@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -41,7 +42,7 @@ public class LoginController implements Initializable {
         }
     }
 
-    public void handleLoginButton(ActionEvent event) throws IOException, SQLServerException {
+    public void handleLoginButton(ActionEvent event) throws IOException, SQLException {
         String username = usernameTXT.getText();
         String password = passwordTXT.getText();
 
@@ -60,7 +61,7 @@ public class LoginController implements Initializable {
     }
 
 
-    private void navigateToView(String viewPath, Employee employee) throws IOException {
+    private void navigateToView(String viewPath, Employee employee) throws IOException, SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
         Parent root = loader.load();
         Scene scene = new Scene(root);
