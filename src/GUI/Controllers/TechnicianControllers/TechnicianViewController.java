@@ -4,8 +4,7 @@ import BE.Documentation;
 import BE.Employee;
 import BE.Project;
 import DAL.ProjectManager_DB;
-import GUI.Models.ProjectManagerModel;
-import GUI.Models.TechnicianModel;
+import GUI.Models.FacadeModel;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -76,22 +75,19 @@ public class TechnicianViewController implements Initializable{
     @FXML
     private Label usernameLabel;
     private Employee loggedInEmployee;
-    private TechnicianModel technicianModel;
 
+    FacadeModel facadeModel;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         try {
-            projectManagerDb = new ProjectManager_DB();
-            technicianModel = new TechnicianModel();
+            facadeModel = new FacadeModel();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
     public void selectedProject() throws IOException, SQLException {
-        ObservableList<Project> projectId  = technicianModel.getAllProjectsByTechnicianId(loggedInEmployee.getId());
-        System.out.println(projectId.size());
-
+        ObservableList<Project> projectId  = facadeModel.getAllProjectsByTechnicianId(loggedInEmployee.getId());
         ObservableList<Project> list1 = comboBoxSelectProject.getItems();
         comboBoxSelectProject.getItems().clear();
 
@@ -99,6 +95,21 @@ public class TechnicianViewController implements Initializable{
             list1.add(i);
         }
     }
+
+        public void newProjectButton(ActionEvent event) {
+        String projectName = projectNameTXT.getText();
+
+        try {
+            facadeModel.createNewProject(projectName);
+            projectNameTXT.clear();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
+            alert.show();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void uploadButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/Edit-pic.fxml"));
@@ -305,37 +316,6 @@ public class TechnicianViewController implements Initializable{
 
         try {
             document.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void newProjectButton(ActionEvent event) {
-        String projectName = projectNameTXT.getText();
-
-        try {
-            technicianModel.createNewProject(projectName);
-
-            projectNameTXT.clear();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
-            alert.show();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    public void EditDocumentationButton(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Gui/Views/technician/editDocView.fxml"));
-            Parent editDoc = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Edit Documentation");
-            stage.setScene(new Scene(editDoc));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

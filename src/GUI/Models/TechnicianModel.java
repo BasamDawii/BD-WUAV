@@ -24,17 +24,11 @@ public class TechnicianModel {
         refreshEventListView();
 
     }
-
     public void refreshEventListView() throws Exception {
         //Update the listview
         allProjects.clear();
         allProjects.setAll(technicianManager.getAllProjects());
     }
-
-    public ObservableList<Project> getAllProjects(){
-        return allProjects;
-    }
-
     public ObservableList<Project> getAllProjectsByTechnicianId(int technicianId) throws SQLException {
         return FXCollections.observableArrayList(technicianManager.getAllProjectsByTechnicianId(technicianId));
     }

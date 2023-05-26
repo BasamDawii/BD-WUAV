@@ -56,30 +56,6 @@ public class ProjectManager_DB{
         }
     }
 
-    public Documentation getDocumentById(int documentId) {
-        String sql = "SELECT * FROM Documentation WHERE id = ?";
-        try (Connection connection = dbConnector.getConnected();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, documentId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String documentationName = resultSet.getString("docName");
-                    LocalDate startDate = resultSet.getDate("startDate").toLocalDate();
-                    LocalDate endDate = resultSet.getDate("endDate").toLocalDate();
-                    String customerName = resultSet.getString("customerName");
-                    String pdfData = resultSet.getString("pdfFile");
-                    int projectId = resultSet.getInt("projectId");
-
-                    return new Documentation(id, documentationName, startDate, endDate, customerName, pdfData, projectId);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle the exception as per your application's requirements
-        }
-        return null; // Document not found with the given ID
-    }
 
     public ArrayList<Documentation> getData() throws SQLServerException, IOException {
         ArrayList<Documentation> documentations = new ArrayList<>();
@@ -112,34 +88,6 @@ public class ProjectManager_DB{
     }
 
 
-    public ArrayList<String> getTechnicianNames() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        String query = "SELECT username FROM Employee WHERE employeeType = 'Technician'";
-        try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                String username = rs.getString("username");
-                arrayList.add(username);
-            }
-            return arrayList;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error while retrieving data.", e);
-        }
-    }
-    public ArrayList<String> getProjectNames() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        String query = "SELECT projectName FROM Project";
-        try (Connection connection = dbConnector.getConnected(); Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                String projectName = rs.getString("projectName");
-                arrayList.add(projectName);
-            }
-            return arrayList;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error while retrieving data.", e);
-        }
-    }
 
     public List< Project > getAllProjects() throws SQLException {
         List < Project > allProjects = new ArrayList < > ();

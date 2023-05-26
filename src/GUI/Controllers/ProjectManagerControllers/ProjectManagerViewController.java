@@ -5,7 +5,7 @@ import BE.Documentation;
 import BE.Employee;
 import BE.Project;
 import BE.Technician;
-import GUI.Models.ProjectManagerModel;
+import GUI.Models.FacadeModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -46,12 +46,12 @@ public class ProjectManagerViewController implements Initializable {
     private TableView<Documentation> tableView;
     @FXML
     private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
-    ProjectManagerModel projectManagerModel;
+    FacadeModel facadeModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            projectManagerModel = new ProjectManagerModel();
+            facadeModel = new FacadeModel();
             checkProjectStatus();
             viewAllProject();
             addTechnician();
@@ -70,7 +70,7 @@ public class ProjectManagerViewController implements Initializable {
     public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
-        arrayList = new ProjectManagerModel().loadData();
+        arrayList = facadeModel.loadData();
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
@@ -83,13 +83,12 @@ public class ProjectManagerViewController implements Initializable {
         observableList.removeAll();
         for (Documentation project: arrayList) {
             observableList.add(project);
-            System.out.println(project.toString());
         }
         tableView.setItems(observableList);
     }
     public void addTechnician() throws IOException, SQLException {
-        ObservableList<Project> projectId = projectManagerModel.getAllProjects();
-        ObservableList<Technician> technicianId = projectManagerModel.getAllTechnicians();
+        ObservableList<Project> projectId = facadeModel.getAllProjects();
+        ObservableList<Technician> technicianId = facadeModel.getAllTechnicians();
 
         ObservableList<Project> list1 = comboBox1.getItems();
         ObservableList<Technician> list2 = comboBox2.getItems();
@@ -117,7 +116,7 @@ public class ProjectManagerViewController implements Initializable {
     public void confirmTechnician(ActionEvent event) throws SQLException {
         int projectId = getSelectedProjectId();
         int technicianId = getSelectedTechnicianId();
-        boolean added = new ProjectManagerModel().addEmpProject(projectId,technicianId);
+        boolean added = facadeModel.addEmpProject(projectId,technicianId);
         if (added){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Technician Status");
@@ -171,7 +170,7 @@ public class ProjectManagerViewController implements Initializable {
             // User confirmed the deletion, proceed with deleting the documentation
 
             // Call the delete method in your ProjectManagerModel or ProjectManager_DB to delete the documentation from the database
-            boolean deleted = new ProjectManagerModel().deleteDocumentation(selectedDocumentation);
+            boolean deleted = facadeModel.deleteDocumentation(selectedDocumentation);
             if (deleted) {
                 // Remove the selected documentation from the table view
                 tableView.getItems().remove(selectedDocumentation);
@@ -194,12 +193,8 @@ public class ProjectManagerViewController implements Initializable {
     public void checkProjectStatus() {
         ArrayList<Documentation> projects = null;
         try {
-            projects = new ProjectManagerModel().loadData();
-        } catch (SQLServerException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+            projects = facadeModel.loadData();
+        } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
         LocalDate currentDate = LocalDate.now();

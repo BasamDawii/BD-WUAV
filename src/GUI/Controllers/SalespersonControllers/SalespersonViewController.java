@@ -3,6 +3,7 @@ package GUI.Controllers.SalespersonControllers;
 import BE.Documentation;
 import BE.Employee;
 import DAL.ProjectManager_DB;
+import GUI.Models.FacadeModel;
 import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
@@ -39,18 +40,15 @@ public class SalespersonViewController implements Initializable {
     private TableView<Documentation> tableView;
     @FXML
     private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
-
-    private ProjectManager_DB projectManagerDb;
+    FacadeModel facadeModel;
     @FXML
     private TextField documentIdTextField;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            projectManagerDb = new ProjectManager_DB();
+            facadeModel = new FacadeModel();
             viewAllProject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -70,7 +68,7 @@ public class SalespersonViewController implements Initializable {
     public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
-        arrayList = new ProjectManagerModel().loadData();
+        arrayList = facadeModel.loadData();
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));

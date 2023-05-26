@@ -7,6 +7,7 @@ import BE.Technician;
 import GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController;
 import GUI.Controllers.SalespersonControllers.SalespersonViewController;
 import GUI.Controllers.TechnicianControllers.TechnicianViewController;
+import GUI.Models.FacadeModel;
 import GUI.Models.LoginModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.event.ActionEvent;
@@ -31,12 +32,12 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField passwordTXT;
 
-    private LoginModel loginModel;
+    FacadeModel facadeModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            loginModel = new LoginModel();
+            facadeModel = new FacadeModel();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,7 +47,7 @@ public class LoginController implements Initializable {
         String username = usernameTXT.getText();
         String password = passwordTXT.getText();
 
-        Employee employee = loginModel.employeeLogin(username, password);
+        Employee employee = facadeModel.employeeLogin(username, password);
 
         if (employee instanceof Technician) {
             navigateToView("/GUI/Views/technician/technician_view.fxml", employee);
