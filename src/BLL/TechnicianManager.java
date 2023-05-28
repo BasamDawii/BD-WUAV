@@ -22,8 +22,8 @@ public class TechnicianManager {
         return technician_db.getAllProjectsByTechnicianId(technicianId);
     }
 
-    public Project createNewProject(String projectName) throws Exception {
-        return technician_db.createNewProject(projectName);
+    public Project createNewProject(String projectName, int employeeId) throws Exception {
+        return technician_db.createNewProject(projectName, employeeId);
     }
 
 }

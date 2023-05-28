@@ -17,32 +17,42 @@ public class Technician_DB {
     public Technician_DB(){
         dbConnector = new DBConnector();
     }
-    public Project createNewProject(String projectName) throws Exception {
-        // Creates an SQL command
-        String sql = "INSERT INTO Project (projectName) VALUES (?);";
-        // Get connection to database
-        try (Connection connection = dbConnector.getConnected()) {
-            // Creates a statement
-            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            // Bind parameters
-            stmt.setString(1, projectName);
+    public Project createNewProject(String projectName, int employeeId) throws Exception {
 
-            stmt.executeUpdate();
+        String insertSql = "INSERT INTO Project (projectName) VALUES (?)";
+        String updateSql = "INSERT INTO Project_Employee (projectId, employeeId) VALUES (?, ?)";
+
+        try (Connection connection = dbConnector.getConnected();
+             PreparedStatement insertStmt = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+
+            // Insert project
+            insertStmt.setString(1, projectName);
+            insertStmt.executeUpdate();
+
             // Get the generated ID from the DB
-            ResultSet rs = stmt.getGeneratedKeys();
-            int id = 0;
-            if (rs.next()) {
-                id = rs.getInt(1);
+            int projectId;
+            try (ResultSet rs = insertStmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    projectId = rs.getInt(1);
+                } else {
+                    throw new SQLException("Failed to retrieve generated project ID.");
+                }
             }
-            // Create a BarEvent object and send up the layers
-            Project project = new Project(id, projectName);
+
+            // Associate project with employee
+            updateStmt.setInt(1, projectId);
+            updateStmt.setInt(2, employeeId);
+            updateStmt.executeUpdate();
+
+            // Create a Project object and return it
+            Project project = new Project(projectId, projectName);
             return project;
-        } catch (SQLServerException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
 
     public List < Project > getAllProjects() throws SQLException {

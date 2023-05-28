@@ -10,6 +10,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -98,9 +99,9 @@ public class TechnicianViewController implements Initializable{
 
         public void newProjectButton(ActionEvent event) {
         String projectName = projectNameTXT.getText();
-
+        int employeeId = loggedInEmployee.getId();
         try {
-            facadeModel.createNewProject(projectName);
+            facadeModel.createNewProject(projectName, employeeId);
             projectNameTXT.clear();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
             alert.show();
@@ -108,6 +109,7 @@ public class TechnicianViewController implements Initializable{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        comboBoxSelectProject.getItems().add(projectName);
     }
 
     public void uploadButton(ActionEvent event) {
@@ -177,7 +179,6 @@ public class TechnicianViewController implements Initializable{
         LocalDate startDate = startDateTXT.getValue();
         LocalDate endDate = endDateTXT.getValue();
         String customerName = customerNameTXT.getText();
-
         // Generate the PDF
         try {
             // Create a new PDF document
