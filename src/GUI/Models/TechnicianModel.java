@@ -18,10 +18,11 @@ public class TechnicianModel {
         allProjects.addAll(technicianManager.getAllProjects());
         //allProjects = FXCollections.observableArrayList();
     }
-    public void createNewProject(String projectName, int employeeId) throws Exception {
+    public Project createNewProject(String projectName, int employeeId) throws Exception {
         Project project = technicianManager.createNewProject(projectName, employeeId);
         allProjects.add(project);
         refreshEventListView();
+        return project;
     }
     public void refreshEventListView() throws Exception {
         //Update the listview

@@ -50,9 +50,10 @@ public class FacadeModel {
     }
 
     // TechnicianModel methods
-    public void createNewProject(String projectName, int employeeId) throws Exception {
-        technicianModel.createNewProject(projectName, employeeId);
+    public Project createNewProject(String projectName, int employeeId) throws Exception {
+        return technicianModel.createNewProject(projectName, employeeId);
     }
+
 
     public ObservableList<Project> getAllProjectsByTechnicianId(int technicianId) throws SQLException {
         return technicianModel.getAllProjectsByTechnicianId(technicianId);

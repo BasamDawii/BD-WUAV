@@ -59,7 +59,7 @@ public class TechnicianViewController implements Initializable{
 
 
     @FXML
-    private  ComboBox comboBoxSelectProject;
+    private ComboBox<Project> comboBoxSelectProject;
     private ProjectManager_DB projectManagerDb;
     @FXML
     private TextField docNameTXT, customerNameTXT, projectNameTXT;
@@ -87,6 +87,8 @@ public class TechnicianViewController implements Initializable{
             throw new RuntimeException(e);
         }
     }
+
+
     public void selectedProject() throws IOException, SQLException {
         ObservableList<Project> projectId  = facadeModel.getAllProjectsByTechnicianId(loggedInEmployee.getId());
         ObservableList<Project> list1 = comboBoxSelectProject.getItems();
@@ -97,20 +99,20 @@ public class TechnicianViewController implements Initializable{
         }
     }
 
-        public void newProjectButton(ActionEvent event) {
+    public void newProjectButton(ActionEvent event) {
         String projectName = projectNameTXT.getText();
         int employeeId = loggedInEmployee.getId();
         try {
-            facadeModel.createNewProject(projectName, employeeId);
+            Project newProject = facadeModel.createNewProject(projectName, employeeId);
+            comboBoxSelectProject.getItems().add(newProject);
             projectNameTXT.clear();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project ..!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have successfully created a new project!");
             alert.show();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        comboBoxSelectProject.getItems().add(projectName);
     }
+
 
     public void uploadButton(ActionEvent event) {
         try {
@@ -168,9 +170,14 @@ public class TechnicianViewController implements Initializable{
         }
 
     }
-    public int getSelectedProjectId(){
-        Project selectedProject = (Project) comboBoxSelectProject.getSelectionModel().getSelectedItem();
-        return selectedProject.getId();
+    public int getSelectedProjectId() {
+        Object selectedItem = comboBoxSelectProject.getSelectionModel().getSelectedItem();
+        if (selectedItem instanceof Project) {
+            Project selectedProject = (Project) selectedItem;
+            return selectedProject.getId();
+        } else {
+            throw new RuntimeException("Selected item is not a Project.");
+        }
     }
 
     public void saveButton(ActionEvent event) {
