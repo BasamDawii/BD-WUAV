@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Login_DB {
-    private DBConnector dbConnector;
+    public DBConnector dbConnector;
+
 
     public Login_DB() {
         dbConnector = new DBConnector();
