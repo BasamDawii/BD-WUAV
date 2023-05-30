@@ -103,35 +103,37 @@ public class ProjectManagerViewController implements Initializable {
 
     }
 
-    public int getSelectedProjectId(){
+    public Integer getSelectedProjectId(){
         Project selectedProject = (Project) comboBox1.getSelectionModel().getSelectedItem();
-        return selectedProject.getId();
+        return selectedProject != null ? selectedProject.getId() : null;
     }
 
-    public int getSelectedTechnicianId(){
+    public Integer getSelectedTechnicianId(){
         Technician selectedTechnician = (Technician) comboBox2.getSelectionModel().getSelectedItem();
-        return selectedTechnician.getId();
+        return selectedTechnician != null ? selectedTechnician.getId() : null;
     }
 
     public void confirmTechnician(ActionEvent event) throws SQLException {
-        int projectId = getSelectedProjectId();
-        int technicianId = getSelectedTechnicianId();
-        boolean added = facadeModel.addEmpProject(projectId,technicianId);
-        if (added){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Technician Status");
-            alert.setHeaderText("Technician Status");
-            alert.setContentText("Technician Added");
-            alert.showAndWait();
-        }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Technician Status");
-            alert.setHeaderText("Technician Status");
-            alert.setContentText("[ERROR]! Technician Not Added");
-            alert.showAndWait();
+        Integer projectId = getSelectedProjectId();
+        Integer technicianId = getSelectedTechnicianId();
+
+        if (projectId == null || technicianId == null) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Please select a project and a technician.");
+            return;
         }
 
+        try {
+            boolean added = facadeModel.addEmpProject(projectId, technicianId);
+            if (added) {
+                showAlert(Alert.AlertType.INFORMATION, "Technician Status", "Technician Added");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Technician Status", "[ERROR]! Technician Not Added");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
     private void navigateToView(String viewPath, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
         Parent root = loader.load(getClass().getResource(viewPath));

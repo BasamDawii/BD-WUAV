@@ -100,8 +100,14 @@ public class TechnicianViewController implements Initializable{
     }
 
     public void newProjectButton(ActionEvent event) {
-        String projectName = projectNameTXT.getText();
+        String projectName = projectNameTXT.getText().trim(); // Trim leading and trailing whitespaces
         int employeeId = loggedInEmployee.getId();
+
+        if (projectName.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Please enter a project name.");
+            return;
+        }
+
         try {
             Project newProject = facadeModel.createNewProject(projectName, employeeId);
             comboBoxSelectProject.getItems().add(newProject);
@@ -112,6 +118,7 @@ public class TechnicianViewController implements Initializable{
             throw new RuntimeException(e);
         }
     }
+
 
 
     public void uploadButton(ActionEvent event) {
@@ -181,6 +188,12 @@ public class TechnicianViewController implements Initializable{
     }
 
     public void saveButton(ActionEvent event) {
+        // Check if an image is selected or uploaded
+        if (uploadedImageView.getImage() == null) {
+            showAlert(Alert.AlertType.WARNING, "Image Missing", "Please select or upload an image.");
+            return;
+        }
+
         // Get the project information from the input fields
         String docName = docNameTXT.getText();
         LocalDate startDate = startDateTXT.getValue();
@@ -247,6 +260,7 @@ public class TechnicianViewController implements Initializable{
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while saving the project details and PDF.");
         }
     }
+
 
 
 
