@@ -2,9 +2,7 @@ package GUI.Controllers.SalespersonControllers;
 
 import BE.Documentation;
 import BE.Employee;
-import DAL.ProjectManager_DB;
 import GUI.Models.FacadeModel;
-import GUI.Models.ProjectManagerModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,13 +17,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.ResourceBundle;
@@ -41,8 +37,6 @@ public class SalespersonViewController implements Initializable {
     @FXML
     private TableColumn<Documentation, String> id, docName, startDate, endDate, customerName, projectId;
     FacadeModel facadeModel;
-    @FXML
-    private TextField documentIdTextField;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -68,7 +62,7 @@ public class SalespersonViewController implements Initializable {
     public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
-        arrayList = facadeModel.loadData();
+        arrayList = facadeModel.loadDocumentationData();
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
@@ -147,8 +141,5 @@ public class SalespersonViewController implements Initializable {
         alert.showAndWait();
     }
 
-    public void tableViewSelected(MouseEvent mouseEvent) {
-
-    }
 }
 

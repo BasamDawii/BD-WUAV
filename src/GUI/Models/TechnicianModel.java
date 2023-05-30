@@ -1,12 +1,14 @@
 package GUI.Models;
 
+import BE.Documentation;
 import BE.Project;
 import BLL.TechnicianManager;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class TechnicianModel {
     private TechnicianManager technicianManager;
@@ -33,4 +35,11 @@ public class TechnicianModel {
         return FXCollections.observableArrayList(technicianManager.getAllProjectsByTechnicianId(technicianId));
     }
 
+    public Documentation saveDocToDataBase(Documentation documentation) {
+        return technicianManager.saveDocToDataBase(documentation);
+    }
+
+    public ArrayList<Documentation> loadDocumentationData() throws SQLServerException, IOException {
+        return technicianManager.getDocumentationData();
+    }
 }

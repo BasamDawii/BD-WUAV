@@ -46,7 +46,7 @@
       </VBox>
       <VBox prefHeight="700.0" prefWidth="899.0">
          <children>
-            <TableView fx:id="tableView" onMouseClicked="#tableViewSelected" prefHeight="665.0" prefWidth="866.0">
+            <TableView fx:id="tableView" prefHeight="665.0" prefWidth="866.0">
                <columns>
                   <TableColumn fx:id="docName" prefWidth="170.933349609375" text="docName" />
                   <TableColumn fx:id="startDate" minWidth="0.0" prefWidth="199.99984741210938" text="Start Date" />

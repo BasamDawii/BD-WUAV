@@ -1,6 +1,5 @@
 package BE;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class Documentation {
@@ -38,43 +37,22 @@ public class Documentation {
         this.id = id;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
 
     public String getDocName() {
         return docName;
     }
 
-    public void setDocName(String docName) {
-        this.docName = docName;
-    }
 
     public String getCustomerName() {
         return customerName;
-    }
-
-    public void setCostumerName(String costumerName) {
-        this.customerName = costumerName;
-    }
-
-    public void setPdfData(String pdfData) {
-        this.pdfData = pdfData;
     }
 
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
 }

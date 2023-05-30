@@ -8,8 +8,6 @@ import GUI.Controllers.ProjectManagerControllers.ProjectManagerViewController;
 import GUI.Controllers.SalespersonControllers.SalespersonViewController;
 import GUI.Controllers.TechnicianControllers.TechnicianViewController;
 import GUI.Models.FacadeModel;
-import GUI.Models.LoginModel;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +58,6 @@ public class LoginController implements Initializable {
             // ...
         }
     }
-
 
     private void navigateToView(String viewPath, Employee employee) throws IOException, SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));

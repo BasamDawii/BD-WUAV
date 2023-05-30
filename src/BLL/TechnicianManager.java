@@ -1,10 +1,12 @@
 package BLL;
 
+import BE.Documentation;
 import BE.Project;
-
 import DAL.Technician_DB;
-
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TechnicianManager {
@@ -24,6 +26,14 @@ public class TechnicianManager {
 
     public Project createNewProject(String projectName, int employeeId) throws Exception {
         return technician_db.createNewProject(projectName, employeeId);
+    }
+
+    public Documentation saveDocToDataBase(Documentation documentation) {
+            return technician_db.saveDocToDataBase(documentation);
+    }
+
+    public ArrayList<Documentation> getDocumentationData() throws SQLServerException, IOException {
+        return technician_db.getDocumentationData();
     }
 
 }

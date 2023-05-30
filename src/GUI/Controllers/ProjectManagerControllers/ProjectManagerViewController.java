@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -34,14 +33,10 @@ public class ProjectManagerViewController implements Initializable {
     private Employee loggedInEmployee;
     @FXML
     private Label usernameLabel;
-
-    @FXML
-    private SplitPane splitPane;
     @FXML
     private ComboBox<Project> comboBox1;
     @FXML
     private ComboBox<Technician> comboBox2;
-
     @FXML
     private TableView<Documentation> tableView;
     @FXML
@@ -70,7 +65,7 @@ public class ProjectManagerViewController implements Initializable {
     public void viewAllProject() throws IOException, SQLException {
 
         ArrayList<Documentation> arrayList = new ArrayList<>();
-        arrayList = facadeModel.loadData();
+        arrayList = facadeModel.loadDocumentationData();
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         docName.setCellValueFactory(new PropertyValueFactory<>("docName"));
         startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
@@ -100,7 +95,6 @@ public class ProjectManagerViewController implements Initializable {
         for (Technician i: technicianId) {
             list2.add(i);
         }
-
     }
 
     public Integer getSelectedProjectId(){
@@ -149,9 +143,6 @@ public class ProjectManagerViewController implements Initializable {
         usernameLabel.setTranslateX(90);
     }
 
-    public void tableViewSelected(MouseEvent event) {
-    }
-
     public void handleDeleteButton(ActionEvent event) throws SQLException {
         // Get the selected documentation from the table view
         Documentation selectedDocumentation = tableView.getSelectionModel().getSelectedItem();
@@ -195,7 +186,7 @@ public class ProjectManagerViewController implements Initializable {
     public void checkProjectStatus() {
         ArrayList<Documentation> projects = null;
         try {
-            projects = facadeModel.loadData();
+            projects = facadeModel.loadDocumentationData();
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }

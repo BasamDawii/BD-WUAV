@@ -5,7 +5,6 @@ import BE.Employee;
 import BE.Project;
 import BE.Technician;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
@@ -37,8 +36,8 @@ public class FacadeModel {
         return projectManagerModel.getAllTechnicians();
     }
 
-    public ArrayList<Documentation> loadData() throws SQLServerException, IOException {
-        return projectManagerModel.loadData();
+    public ArrayList<Documentation> loadDocumentationData() throws SQLServerException, IOException {
+        return technicianModel.loadDocumentationData();
     }
 
     public boolean addEmpProject(int pid, int tid) {
@@ -54,6 +53,9 @@ public class FacadeModel {
         return technicianModel.createNewProject(projectName, employeeId);
     }
 
+    public Documentation saveDocToDataBase(Documentation documentation) {
+        return technicianModel.saveDocToDataBase(documentation);
+    }
 
     public ObservableList<Project> getAllProjectsByTechnicianId(int technicianId) throws SQLException {
         return technicianModel.getAllProjectsByTechnicianId(technicianId);

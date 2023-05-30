@@ -3,7 +3,6 @@ package GUI.Controllers.TechnicianControllers;
 import BE.Documentation;
 import BE.Employee;
 import BE.Project;
-import DAL.ProjectManager_DB;
 import GUI.Models.FacadeModel;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -60,10 +59,8 @@ public class TechnicianViewController implements Initializable{
 
     @FXML
     private ComboBox<Project> comboBoxSelectProject;
-    private ProjectManager_DB projectManagerDb;
     @FXML
     private TextField docNameTXT, customerNameTXT, projectNameTXT;
-
     @FXML
     private DatePicker startDateTXT, endDateTXT;
     @FXML
@@ -72,7 +69,6 @@ public class TechnicianViewController implements Initializable{
     private TextArea textFieldArea;
     @FXML
     private ImageView uploadedImageView;
-    private List<Node> imagePaneNodes;
     @FXML
     private Label usernameLabel;
     private Employee loggedInEmployee;
@@ -136,9 +132,6 @@ public class TechnicianViewController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public TechnicianViewController() {
-        projectManagerDb = new ProjectManager_DB();
     }
 
     public void setLoggedInEmployee(Employee employee) throws SQLException, IOException {
@@ -250,7 +243,7 @@ public class TechnicianViewController implements Initializable{
             Documentation documentation = new Documentation(0, docName, startDate, endDate, customerName, encodedPdfData, getSelectedProjectId());
 
             // Save the generated PDF to the database
-            projectManagerDb.saveDocToDataBase(documentation);
+            facadeModel.saveDocToDataBase(documentation);
 
             // Display a success message
             showAlert(Alert.AlertType.INFORMATION, "Success", "Project details and PDF saved successfully!");

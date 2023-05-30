@@ -16,9 +16,7 @@ public class Project {
         return id;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
+    public String getProjectName() {return projectName;}
 
     @Override
     public String toString() {

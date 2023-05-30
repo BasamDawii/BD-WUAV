@@ -5,7 +5,6 @@ import BE.ProjectManager;
 import BE.Salesperson;
 import BE.Technician;
 import DAL.database.DBConnector;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
