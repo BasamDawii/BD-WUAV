@@ -14,9 +14,9 @@ public class DBConnector {
     public DBConnector() {
         dataSource = new SQLServerDataSource();
         dataSource.setServerName("10.176.111.34");
-        dataSource.setDatabaseName("*****");
-        dataSource.setUser("*****");
-        dataSource.setPassword("*****");
+        dataSource.setDatabaseName("BM_EXAMEN_WUAV");
+        dataSource.setUser("CSe2022A_e_8");
+        dataSource.setPassword("CSe2022AE8#");
         dataSource.setTrustServerCertificate(true);
         dataSource.setPortNumber(1433);
     }

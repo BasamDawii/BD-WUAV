@@ -54,8 +54,7 @@ public class LoginController implements Initializable {
         } else if (employee instanceof Salesperson) {
             navigateToView("/GUI/Views/salesperson/salesperson_view.fxml", employee);
         } else {
-            // Show an error message if the login is unsuccessful
-            // ...
+
         }
     }
 
